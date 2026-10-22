@@ -1,4 +1,7 @@
+# Godot 4
 .godot/
-builds/*
-!builds/.gitkeep
+*.import.bak
+export/
 *.tmp
+builds/
+*.log

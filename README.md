@@ -1,80 +1,69 @@
-# MNKISWAN · Cozy World
+# MNKISWAN: Cozy World — Wings & Friends
 
-A playable single-player 3D woodland life game for **Godot 4.7.2 stable**. Built from the supplied full GDD and character consistency kit. Mnki explores; Swan accompanies him; a compact twelve-request story ends in a village gathering. You can continue tending the village afterward.
+Godot **4.7.2**, version **0.2.0**. This revision uses the owner's uploaded Claude project as its base, retaining its village, quests and gameplay systems while adding playable character switching, Swan flight and revised character art.
 
-## Downloads
+## Download and play
 
-Ready-to-run packages are kept in the repository's `downloads/` folder:
+- [Windows x64 game ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Windows_x64.zip)
+- [Linux x64 game ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Linux_x64.zip)
+- [Godot 4.7.2 source ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Source_0.2.0.zip)
 
-- `MNKISWAN_Cozy_World_Windows_x64.zip`
-- `MNKISWAN_Cozy_World_Linux_x64.zip`
+Extract the whole ZIP first. On Windows, run `MNKISWAN_Cozy_World.exe`; Godot is not required to play. On Linux, run `./MNKISWAN_Cozy_World.x86_64` (use `chmod +x MNKISWAN_Cozy_World.x86_64` if your extractor removes executable permissions).
 
-The repository itself is the complete Godot 4.7.2 source project. On GitHub, use **Code → Download ZIP** to download the source without Git.
-
-This is a complete playable **systems foundation**, not a finished commercial release. The original reference portraits are used unchanged. In-world characters are articulated procedural 3D interpretations with the canonical features; they are not final artist-approved, skinned production models. See [the scope and remaining work](docs/IMPLEMENTATION.md).
-
-## Play
-
-- **Windows:** unzip the Windows build and run `MNKISWAN_Cozy_World.exe`. No editor or installation required. The build is unsigned. Exported successfully; Windows execution has not been tested on this Linux machine.
-- **Linux:** unzip the Linux build, run `chmod +x MNKISWAN_Cozy_World.x86_64`, then launch it. Requires an OpenGL 3.3-capable desktop. Embedded game data means there is no separate PCK file to lose.
-- **Editor:** import `project.godot` in **Godot 4.7.2**, allow the asset import to complete, and press **F6/F5**. No addons, package installation, API keys, online accounts, or backend services are needed. Use F5 for the full game; F6 runs the selected scene.
-- **This cloud workspace:** `./tools/godot.sh --editor` or `./tools/godot.sh` when a graphical display is available. The wrapper selects the exact downloaded engine and uses writable XDG data paths in this sandbox.
-
-Use the **Compatibility renderer**, the tested default. Forward+ and other engine versions are not validated. Install the official 4.7.2 export templates through the Godot editor to export on another machine. Windows and Linux export presets are included.
-
-## A first visit
-
-1. Begin in Sunshine Forest. Walk to a berry bush; the `[E] Gather` prompt names the focused source. The bush visibly empties and regrows later.
-2. Gather at least 3 berries. Open the map with **M** and pin **Village Park**. Follow the compass distance toward the park and read its request board.
-3. Deliver **A welcome basket** at the board for coins and a visible basket in the park. **J** reads and tracks requests anywhere; rewards are delivered only at the board.
-4. Explore the orchard, fish at the waterfall jetty, meet Thronn, or plant at the paddy field. The early requests can be done in any order.
-5. At the market, choose a quantity, review its payout, and sell surplus goods. Request ingredients are reserved automatically. Buy seeds, decorations, and three visible stall upgrades.
-6. Enter the treehouse at its front steps. The central home station opens rest, storage and furnishing; the east station leads upstairs. Watered crops mature during a rest. Place purchased decorations at ten curated anchors.
-7. Complete eleven local requests and discover all thirteen regions, then return to the board for the final gathering. No ordinary task expires, kills a crop, or removes a friendship.
+To edit, extract the **source ZIP**, open Godot **4.7.2**, choose **Import**, select `project.godot`, then press **F5**. Both desktop export presets are included; install the matching 4.7.2 export templates to build locally. The Compatibility renderer supports OpenGL 3.3 hardware.
 
 ## Controls
 
-| Action | Default |
+| Input | Action |
 | --- | --- |
-| Move | WASD / arrow keys |
-| Look | Mouse |
-| Interact / reel after a bite | E |
-| Jump / run | Space / Left Shift |
-| Camera distance | Mouse wheel |
-| Select seed | 1–5 (rice, carrot, tomato, greens, bloom) |
-| Bag / journal / map | I or Tab / J / M |
-| Pause or close menu | Esc |
-| Cancel fishing | Esc or right-click |
-| Save / hide HUD | F5 / F2 |
+| WASD / arrows | Move relative to the camera |
+| Mouse / wheel | Look around / zoom |
+| C | Switch between Mnki and Swan on the ground |
+| F, as Swan | Take off; toggle landing / hover while airborne |
+| Space | Jump on foot; rise while flying |
+| Ctrl | Descend while flying |
+| Shift | Run / fly faster |
+| E | Talk, gather, farm, fish and interact |
+| R | Change seed |
+| Tab / I, J, M | Inventory, journal, map |
+| Esc | Pause or close a menu; cancel fishing |
 
-Settings offer rebinding, music/ambience/effects volume, sensitivity, invert Y, reduced decorative motion, larger text, fullscreen and relaxed fishing. Escape remains the menu recovery key. Menus pause the simulation and release the mouse.
+Actions can be rebound in Settings. Flight has no stamina penalty. Release movement to hover; press F for a gentle landing. Land before switching. Mnki waits on the ground while Swan flies and rejoins after she lands. Low ceilings block takeoff, solid roofs stop ascent, and flight stays within the village boundary and a 24 m altitude limit.
 
-## The village
+Follow the six gold sky-feather rings. Each pays five coins once; finishing the route pays twenty more and adds a journal note. Remaining feathers appear on the map. This optional route does not replace the village story.
 
-All thirteen named locations are present in one connected map: Sunshine Forest; Waterfall & Ponds; Cherry Berry Maze; Flower Garden; Paddy Field; Tropical Fruit Forest; Thronn's Animal Farm; Three Guardians; Village Park; the shared two-storey Treehouse; Willow Colony; Canopy Colony; and Market Square.
+Both characters share inventory, coins, quests and tools. Saves remember the selected character; saving during flight records the last safe ground position. Existing saves from the uploaded Claude build default to Mnki when they lack a character field. Saves from the earlier, different Codex prototype are not migrated.
 
-Core content: 8 named villagers, 12 requests, 5 crops, 6 fish, 3 animal species, 10 furnishings, 3 stall improvements, gathering/regrowth, persistent world restoration and a day/evening cycle. Farming takes 75–140 seconds of watered game time; resting can advance it immediately. A full day lasts 12 minutes of active play. Time stops in menus. The clock is fictional village time; no real-time waiting is used.
+## What's changed
 
-## Saves
+![Revised Mnki and Swan character models](docs/screenshots/char_preview_three.png)
 
-Manual F5, 90-second autosave during play, quest hand-ins, furnishing, resting, and save/quit write a versioned JSON save under Godot's `user://`. Settings and controls are separate. A verified previous save is retained as `.bak`; loading automatically attempts it if the primary is invalid. Failed transactions and full bags preserve their original state.
+![Swan flying in the village](docs/screenshots/swan_flying.png)
 
-Typical paths:
+- Both Mnki and Swan are playable, with one camera/input owner and the other character as companion.
+- Swan has controllable, collision-aware flight, expanding feather wings, banking, hovering and landing. The HUD shows character, flight controls and altitude.
+- Curved hair locks, curled ends on Swan's long hair, layered feathers, an open hood shell, pleated skirt geometry, richer eyes, facial details, cuffs, thumbs and crossed sneaker laces. Their signature accessories and outfits remain intact.
+- Softer materials, improved close-up shadows, muted terrain, distant hills and drifting clouds.
+- Fishing pauses while menus are open. Saves protect the last valid backup from a corrupt primary. Interaction height is revalidated at use time. Cosmetic gestures no longer block takeoff or movement.
+- The uploaded project's thirteen regions, farming, fishing, animal care, trading, home decoration, quests, journal, settings and day cycle remain available.
 
-- Windows: `%APPDATA%/Godot/app_userdata/MNKISWAN · Cozy World/`
-- Linux: `~/.local/share/godot/app_userdata/MNKISWAN · Cozy World/`
-- Prepared cloud machine: `/workspace/.runtime/data/godot/app_userdata/MNKISWAN · Cozy World/`
+## Development and verification
 
-Tests use isolated save names and never touch `cozy_world.json`. A new-world confirmation appears when a primary or backup save exists.
-
-## Verify and export
-
-```sh
-./tools/test.sh
-./tools/godot.sh --headless --export-release 'Windows Desktop'
-./tools/godot.sh --headless --export-release 'Linux Desktop'
+```bash
+GODOT_BIN=/path/to/Godot_v4.7.2-stable_linux.x86_64 ./tools/test.sh
+./tools/build.sh
 ```
 
-Set `GODOT_BIN` to an exact 4.7.2 executable if it is installed elsewhere. The test runner preserves failing exit codes. It imports assets, runs authoritative system tests, runs actual scene/physics integration tests, then runs a startup/UI smoke test. See [validation](docs/VALIDATION.md) for the recorded results and limits.
+Tests use temporary save directories. `tests/playtest.tscn` covers the village gameplay loop, `tests/flight_switch.tscn` checks physics and persistence, and `tests/ui_flow.tscn` exercises title → game → save → Continue. See [validation](docs/VALIDATION.md) and [revision notes](docs/REVISION.md).
 
-All source files are in this checkout; none have been committed or pushed. Reference art and the full GDD are retained under `reference/`. Asset provenance is recorded in [ASSETS.md](docs/ASSETS.md).
+For a packaged Linux smoke check, use a temporary save directory:
+
+```bash
+XDG_DATA_HOME=$(mktemp -d) ./MNKISWAN_Cozy_World.x86_64 --headless --fixed-fps 60 -- --verify-build
+```
+
+It loads the village, switches to Swan, flies and lands, then exits with a success/failure status. Without `--headless`, it also writes a `build-flight.png` screenshot in that temporary Godot user-data folder.
+
+This is a playable procedural 3D build. Character models are stylized meshes built in code, not artist-authored, skinned production models. Their geometry and animation remain editable in `scripts/art/`. Windows exports are provided; execution testing was performed on Linux.
+
+Character designs and supplied reference art belong to the MNKISWAN creator. Godot's MIT license and third-party notices are included in `docs/` and the game ZIPs.

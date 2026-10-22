@@ -1,25 +1,19 @@
-# Validation record
+# Validation — Wings & Friends 0.2.0
 
-Engine: **4.7.2.stable.official.ed1daf0bf** (official Linux x86_64).
-Renderer: OpenGL Compatibility. Graphical checks used Xorg dummy display, Mesa 25.0.7 / llvmpipe software rendering on Linux. Headless tests do not start audio playback.
+Engine: `4.7.2.stable.official.ed1daf0bf`. Desktop exports use matching official 4.7.2 release templates. Renderer: Compatibility / OpenGL 3.3.
 
-## Automated checks
+`tools/test.sh` runs these suites with a temporary user-data directory:
 
-- **81 state checks passed, 0 failed.** Includes actual gather/plant/water/harvest/care/catch/sell/buy/transfer/place/claim transactions, invalid IDs and quantities, occupied plots, no early/double harvest, daily animal output, reserved ingredients, full capacity, unaffordable purchases, save/load, mid-growth persistence, corrupted primary backup recovery, malformed schemas and a complete twelve-request playthrough ending in the festival flag.
-- **25 scene/physics integration checks passed, 0 failed.** Includes keyboard-driven CharacterBody3D travel, grounding, fall/edge recovery, companion following, nearest reachable interaction selection, actual gathering, duplicate interaction, menu time pause/resume, home door transitions, camera collision retraction, upper-storey collision, fishing input timing, missed-bite recovery and repeated-reel rejection, all-region discovery, populated menus, world save/load and the visible festival gathering.
-- **Startup/UI smoke passed.** Instantiates the complete world, checks more than 65 interactables and all eight villagers, visits thirteen regions, opens all major screens, enters/exits home and round-trips save data.
-- **Editor import passed.** No third-party plugin or network service is required to import/play the project.
+- Village playtest: **54 passed, 0 failed**. Opening quests, gathering, duplicate harvest prevention, animal care, economy, invalid sales, farming, fishing, upgrades, decoration, save/load and corrupt-primary backup recovery.
+- Flight/switch regression: **44 passed, 0 failed**. Outward mesh normals; both playable models; equipment ownership; shared inventory; Swan walking, takeoff, ascent, descent, hovering and landing; grounded Mnki; blocked airborne switching; paused flight; blocked menu commands; altitude and village limits; safe airborne saving; selected-character restoration; sky-feather collection, invalid IDs and duplicate-reward prevention; low-ceiling takeoff rejection; solid-ceiling collision; backup preservation after a corrupt primary.
+- UI flow: title → new game → inventory, journal, map, storage, settings, pause and shops → sleep/save → title → Continue. Four assertions verify seed purchase, next-day save, title return and restored day/coins. **UI FLOW OK**.
 
-The integration suite found an inactive fishing-reel method could award an extra catch if called directly. The authoritative session method now rejects inactive fishing, and the regression check passes. An initial grounding assertion was adjusted to allow the spawn capsule to settle under gravity before checking the floor.
+The corruption tests deliberately produce the warning “Primary save invalid; trying backup.” This is expected and the backup assertions pass.
 
-## Rendered review
+Rendered inspection used Xorg with Mesa llvmpipe software OpenGL at 1280×720. Character front/back/side views and in-game Mnki, Swan and flight views were captured. The screenshot gallery is generated from real scene geometry and the gameplay camera; it is not concept art. Some screenshots stage locations and restored world flags to show the content.
 
-Captured actual title, forest gameplay, character front view, market, farm, pond, garden, map, trading screen and home from Godot 4.7.2. Corrected overexposed lighting and the top-right HUD panel position. Added warm interior lights, visible fishing gear, watered-soil color feedback and full rear hair locks. Screenshots are review artifacts, not a substitute for a human playtest.
+Windows and Linux desktop ZIPs contain embedded-PCK executables, launch/control instructions and Godot license notices. ZIP CRC integrity and SHA-256 hashes are recorded by `tools/package_release.py`. A dedicated source ZIP excludes editor caches, native builds and nested download archives.
 
-## Export validation
+The source ZIP was extracted to a clean directory, with its recorded executable permissions restored, then imported and tested from scratch. The same 54 + 44 checks and UI flow passed. The exported Linux binary passed `--verify-build` both headlessly and in a real OpenGL window: `switch=true takeoff=true airborne=true landed=true`. The graphical executable also saved `native_build_flight.png`. Both runs exited successfully without runtime script errors. Official release templates disable command-line scene overrides, so this in-game verification route loads the actual packaged village and tests its compiled code.
 
-Windows x86_64 and Linux x86_64 release presets use the official 4.7.2 templates with embedded PCK. Both export archives and the editor binary archive were checked against the official SHA-512 manifest. The actual embedded-PCK native Linux executable passed the startup/UI/save-load smoke test after export. The native executable also rendered the title and gameplay on the virtual OpenGL display. Windows execution, GPU performance on a reference PC and Steam submission have not been tested.
-
-Reproduce the source checks with `./tools/test.sh`. Test output is kept in `docs/test-results.txt`. The graphical capture switches are developer tools: `-- --screenshot` and `-- --gallery`. They require a real or virtual OpenGL display; they are not usable under Godot's headless dummy renderer.
-
-No claim is made that the final commercial GDD acceptance bar is complete. See `IMPLEMENTATION.md` for production gaps and unverified behavior.
+Linux is the execution-tested platform. Windows is exported with the official template but was not executed in this Linux environment. Software-renderer screenshots do not establish performance on a gaming GPU. Short graphical exits can report four engine ObjectDB cleanup leaks; headless regression suites finish without those leaks. No runtime script errors appeared in the final rendered gallery.

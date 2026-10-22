@@ -8,15 +8,22 @@ if [[ -z "${GODOT_BIN:-}" ]]; then
     GODOT_BIN=$(command -v godot || command -v godot4)
   fi
 fi
-if [[ "$($GODOT_BIN --version)" != 4.7.2.* ]]; then
-  echo 'Godot 4.7.2 is required. Set GODOT_BIN to its executable.' >&2
-  exit 1
-fi
 # Cloud sandboxes have a read-only home; keep editor and game data in a writable root.
-if [[ -d /workspace && ! -w "${XDG_DATA_HOME:-$HOME/.local/share}" ]]; then
+if [[ -d /workspace && -z "${XDG_DATA_HOME:-}" && ! -w "$HOME/.local/share" ]]; then
   export XDG_DATA_HOME=/workspace/.runtime/data
   export XDG_CONFIG_HOME=/workspace/.runtime/config
   export XDG_CACHE_HOME=/workspace/.runtime/cache
   mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+fi
+if [[ -n "${XDG_DATA_HOME:-}" ]]; then
+  mkdir -p "$XDG_DATA_HOME"
+fi
+if [[ -d /workspace && -z "${XDG_CACHE_HOME:-}" ]]; then
+  export XDG_CACHE_HOME=/workspace/.runtime/cache
+  mkdir -p "$XDG_CACHE_HOME"
+fi
+if [[ "$($GODOT_BIN --version)" != 4.7.2.* ]]; then
+  echo 'Godot 4.7.2 is required. Set GODOT_BIN to its executable.' >&2
+  exit 1
 fi
 exec "$GODOT_BIN" --path . "$@"

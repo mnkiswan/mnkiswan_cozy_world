@@ -8,6 +8,7 @@ var _req: VBoxContainer
 var _disc: VBoxContainer
 var _notes: VBoxContainer
 var _duo: VBoxContainer
+var _life: VBoxContainer
 
 
 func _init() -> void:
@@ -20,7 +21,7 @@ func build_content() -> void:
 	_tabs = TabContainer.new()
 	_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_child(_tabs)
-	for n in ["Requests", "Discoveries", "Notes", "Mnki & Swan"]:
+	for n in ["Requests", "Discoveries", "Notes", "Village life", "Mnki & Swan"]:
 		var v := VBoxContainer.new()
 		v.name = n
 		_tabs.add_child(v)
@@ -29,10 +30,26 @@ func build_content() -> void:
 			"Requests": _req = inner
 			"Discoveries": _disc = inner
 			"Notes": _notes = inner
+			"Village life": _life = inner
 			_: _duo = inner
 
 
 func refresh() -> void:
+	UITheme.clear(_life)
+	_life.add_child(UITheme.label("Little memories, all around the village", 28, UITheme.CORAL, true))
+	_life.add_child(UITheme.label("Three activities in each place. Two coins each per day. No deadlines.", 22))
+	for region in VillageLifeData.PLACES:
+		var place: Array = VillageLifeData.PLACES[region]
+		var known := GameState.world.is_discovered(region)
+		if not known:
+			_life.add_child(UITheme.label("    An undiscovered gathering place", 22, UITheme.MUTED))
+			continue
+		var visits := int(GameState.world.get_state("npc_" + VillageLifeData.host_id(region) + "_friendship").get("days", 0))
+		_life.add_child(UITheme.label("%s · %s · chatted on %d days" % [GameData.REGIONS[region].name, place[2], visits], 25, UITheme.FOREST, true))
+		for i in 3:
+			var state := GameState.world.get_state("cozy_%s_%d" % [region, i])
+			var status := "[done today]" if int(state.get("day", -1)) == TimeManager.day else ("[memory collected]" if state.get("visited", false) else "[new memory]")
+			_life.add_child(UITheme.label("    %s %s" % [status, place[5][i][1]], 21, UITheme.MUTED))
 	var q := GameState.quests
 	UITheme.clear(_req)
 	var act := q.active_ids()

@@ -191,6 +191,11 @@ func _enter_wait(still: bool = false) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Expire speech even while a menu is open or Swan is flying.
+	if _bubble_t > 0.0:
+		_bubble_t -= delta
+		if _bubble_t <= 0.0:
+			_bubble.visible = false
 	var p := _player()
 	if p == null:
 		return
@@ -206,10 +211,6 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		model.set_locomotion(0.0, 6.2, is_on_floor())
 		return
-	if _bubble_t > 0.0:
-		_bubble_t -= delta
-		if _bubble_t <= 0.0:
-			_bubble.visible = false
 	var busy_ui := GameState.is_ui_blocking() and GameState.top_ui() in ["shop", "dialogue", "storage"]
 	if state == "follow" and (busy_ui or p.state == "fishing"):
 		_enter_wait(GameState.top_ui() == "dialogue" or global_position.distance_to(p.global_position) > 5.0)

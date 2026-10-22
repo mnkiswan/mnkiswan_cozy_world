@@ -48,8 +48,17 @@ func _verify_build() -> void:
 	for i in 180:
 		await get_tree().physics_frame
 	var landed := p.flight_mode == "grounded" and p.is_on_floor()
-	var ok := switched and took_off and airborne and landed
+	var activities := get_tree().get_nodes_in_group("cozy_activity")
+	var life_ready := activities.size() == 39 and get_tree().get_nodes_in_group("villager").size() == 23
+	var activity_ok := false
+	if life_ready:
+		var activity: CozyActivity = activities[0]
+		p.teleport(activity.global_position + Vector3(0, 0.1, 1.1))
+		var coins := GameState.economy.coins
+		activity_ok = activity.complete(p) and GameState.economy.coins == coins + 2 and activity.result.visible
+	var ok := switched and took_off and airborne and landed and life_ready and activity_ok
 	print("PACKAGED BUILD CHECK: switch=%s takeoff=%s airborne=%s landed=%s" % [switched, took_off, airborne, landed])
+	print("PACKAGED VILLAGE CHECK: world=%s activity=%s" % [life_ready, activity_ok])
 	get_tree().quit(0 if ok else 1)
 
 

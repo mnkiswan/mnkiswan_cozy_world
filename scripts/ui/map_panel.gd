@@ -66,6 +66,15 @@ class MapCanvas extends Control:
 			var label := ("%d %s" % [int(r.num), String(r.name)]) if known else ("%d ???" % int(r.num))
 			draw_string(font, a + Vector2(6, 22), label, HORIZONTAL_ALIGNMENT_LEFT, b.x - a.x - 8, 17, Color("173b31"))
 		# Quest marker
+		for region in VillageLifeData.PLACES:
+			if not GameState.world.is_discovered(region):
+				continue
+			var at := _w2m(GameData.region_world_pos(region) + Vector3(VillageLifeData.PLACES[region][0]))
+			var color := Color("367e7a")
+			draw_colored_polygon(PackedVector2Array([at + Vector2(0, -7), at + Vector2(7, 0), at + Vector2(0, 7), at + Vector2(-7, 0)]), color)
+			if GameState.world.has_flag("cozy_visit_" + region):
+				draw_circle(at, 2.5, Color("ffecb4"))
+		# Quest marker
 		var target = _quest_target()
 		if target != null:
 			var tp := _w2m(target)
@@ -90,7 +99,8 @@ class MapCanvas extends Control:
 			if not GameState.world.has_flag("sky_feather_%d" % i):
 				var pos := _w2m(SkyTrail.STOPS[i])
 				draw_arc(pos, 6, 0, TAU, 20, Color("bd8a2e"), 2.5)
-		draw_string(font, Vector2(16, size.y - 16), "Arrow: you · White: friend · Gold rings: sky feathers · Coral: objective", HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("173b31"))
+		draw_string(font, Vector2(16, size.y - 36), "Teal diamonds: gathering places · Gold centres: all three memories collected", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("173b31"))
+		draw_string(font, Vector2(16, size.y - 14), "Arrow: you · White: friend · Gold rings: sky feathers · Coral: objective", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("173b31"))
 
 	func _quest_target():
 		var q := GameState.quests.tracked_quest()

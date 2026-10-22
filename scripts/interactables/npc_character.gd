@@ -1,8 +1,7 @@
 class_name NpcCharacter
 extends Interactable
-## Villager NPC. Separate concerns per GDD §6: ScheduleState (where it intends to be by time),
-## ActivityState (walk/idle), DialogueState (QuestSystem + idle lines) and SafetyState
-## (if stuck, it gives up and snaps to its schedule point while off-camera).
+## Scheduled villagers use capsule sweeps to steer around scenery. Blocked routes wait;
+## they never teleport through walls. Hosts stroll locally and greet visitors sparingly.
 
 var npc_id := ""
 var model: CharModel
@@ -15,6 +14,12 @@ var _stuck_t := 0.0
 var _last_pos := Vector3.ZERO
 var _bubble: Label3D
 var _bubble_t := 0.0
+var home_region := ""
+var _greet_cooldown := 10.0
+var _activity_t := 8.0
+var _stroll_index := 0
+var _probe := CapsuleShape3D.new()
+static var next_greeting_ms := 0
 
 
 func setup(id: String, sched: Array) -> NpcCharacter:
@@ -25,6 +30,7 @@ func setup(id: String, sched: Array) -> NpcCharacter:
 
 
 func _ready() -> void:
+	add_to_group("villager")
 	marker_height = 2.0
 	interaction_range = 2.6
 	priority = 3
@@ -39,6 +45,8 @@ func _ready() -> void:
 	var cap := CapsuleShape3D.new()
 	cap.radius = 0.3
 	cap.height = 1.4
+	_probe.radius = 0.34
+	_probe.height = 1.4
 	cs.shape = cap
 	cs.position.y = 0.7
 	_body.add_child(cs)
@@ -46,6 +54,7 @@ func _ready() -> void:
 	var nm := EnvKit.label3d(self, NpcDB.display_name(npc_id), Vector3(0, 1.85, 0), 34, Color("173b31"), true)
 	nm.no_depth_test = false
 	nm.modulate.a = 0.85
+	nm.visibility_range_end = 14.0
 	_bubble = EnvKit.label3d(self, "", Vector3(0, 2.25, 0), 30, Color("3b2a1e"), true)
 	_bubble.visible = false
 	_bubble.width = 600
@@ -78,6 +87,9 @@ func interact(actor: Node) -> void:
 	if actor is Node3D:
 		_face((actor as Node3D).global_position)
 	model.play_action("wave", 0.8)
+	if not home_region.is_empty():
+		_talk_host()
+		return
 	var res := GameState.quests.handle_talk(npc_id)
 	var lines: Array = res.lines
 	var offer: String = res.offer
@@ -94,6 +106,30 @@ func interact(actor: Node) -> void:
 		lines = [_idle_line()]
 	var done := func(_c): _talking = 1.0
 	GameState.request_dialogue(lines, [], done)
+
+func _talk_host() -> void:
+	var place: Array = VillageLifeData.PLACES[home_region]
+	var nm := NpcDB.display_name(npc_id)
+	var state := GameState.world.get_state(object_id + "_friendship", {"days": 0, "last_day": -1})
+	var greeting := "Welcome back, friends." if int(state.get("days", 0)) > 0 else "I'm %s, the %s. It's lovely to meet you both." % [nm, String(place[3]).to_lower()]
+	GameState.request_dialogue([nm + ": " + greeting], ["About this place", "A thought for today", "Just saying hello"], func(choice: int):
+		_talking = 1.0
+		if choice < 0:
+			return
+		if int(state.get("last_day", -1)) != TimeManager.day:
+			state.days = int(state.get("days", 0)) + 1
+			state.last_day = TimeManager.day
+			GameState.world.set_state(object_id + "_friendship", state)
+			SaveManager.autosave("village_friend")
+		var lines: Array = []
+		if choice == 0:
+			lines = [nm + ": " + String(place[5][0][1]) + ", " + String(place[5][1][1]).to_lower() + ", or " + String(place[5][2][1]).to_lower() + ".",
+				nm + ": Each activity earns two thank-you coins once a day. Come back just for the company whenever you like."]
+		elif choice == 1:
+			lines = [nm + ": " + String(place[5][TimeManager.day % 3][3])]
+		else:
+			lines = [nm + ": A hello from you two always makes this place warmer. Thank you for stopping by."]
+		GameState.request_dialogue(lines))
 
 
 func _idle_line() -> String:
@@ -139,6 +175,18 @@ func _physics_process(delta: float) -> void:
 		_bubble_t -= delta
 		if _bubble_t <= 0.0:
 			_bubble.visible = false
+	if GameState.is_ui_blocking():
+		_bubble.visible = false
+		model.set_locomotion(0, 1, true)
+		return
+	_greet_cooldown -= delta
+	var p := GameState.player as MnkiController
+	if p and _greet_cooldown <= 0 and Time.get_ticks_msec() > next_greeting_ms and p.flight_mode == "grounded" and p.global_position.distance_to(global_position) < 3.8:
+		_greet_cooldown = 100.0
+		next_greeting_ms = Time.get_ticks_msec() + 18000
+		var visited := GameState.world.has_flag("cozy_visit_" + home_region)
+		say("Lovely to see you again!" if visited else "Hello, you two! A little rest is always welcome.", 3.5)
+		model.play_action("wave", 0.8)
 	if _talking > 0.0:
 		if not GameState.is_ui_blocking():
 			_talking -= delta
@@ -149,16 +197,33 @@ func _physics_process(delta: float) -> void:
 	if to.length() < 0.3:
 		model.set_locomotion(0, 1, true)
 		_stuck_t = 0.0
+		_activity_t -= delta
+		if _activity_t <= 0 and not home_region.is_empty():
+			_activity_t = 12.0 + float(npc_id.hash() % 8)
+			_stroll_index = (_stroll_index + 1) % schedule.size()
+			_target = schedule[_stroll_index][1]
+			model.play_action("think", 1.5)
 		return
 	var spd := 1.6
-	global_position += to.normalized() * min(spd * delta, to.length())
-	model.rotation.y = lerp_angle(model.rotation.y, atan2(to.x, to.z), 0.12)
+	var direction := safe_direction(to.normalized())
+	if direction == Vector3.ZERO:
+		model.set_locomotion(0, 1, true)
+		return
+	global_position += direction * min(spd * delta, to.length())
+	model.rotation.y = lerp_angle(model.rotation.y, atan2(direction.x, direction.z), 0.12)
 	model.set_locomotion(spd, 3.0, true)
-	# SafetyState: if no progress for a while, recover to the destination.
-	if global_position.distance_to(_last_pos) < 0.01:
-		_stuck_t += delta
-		if _stuck_t > 4.0:
-			push_warning("NPC %s recovered to schedule point" % npc_id)
-			global_position = _target
-			_stuck_t = 0.0
-	_last_pos = global_position
+
+func safe_direction(desired: Vector3) -> Vector3:
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = _probe
+	query.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.78, 0))
+	query.collision_mask = 1 | 16 | 8 | 2 | 4
+	query.exclude = [_body.get_rid()]
+	var space := get_world_3d().direct_space_state
+	for angle in [0.0, 35.0, -35.0, 70.0, -70.0]:
+		var direction := desired.rotated(Vector3.UP, deg_to_rad(angle))
+		query.motion = direction * 0.65
+		var fractions := space.cast_motion(query)
+		if fractions[0] >= 0.99:
+			return direction
+	return Vector3.ZERO

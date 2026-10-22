@@ -41,11 +41,13 @@ func _ready() -> void:
 	_build_regions()
 	_build_stream_and_bridge()
 	_build_scatter()
+	add_child(VillageLife.new())
 	_spawn_characters(loading)
 	add_child(SkyTrail.new())
 	ui = load(UI_SCENE).instantiate()
 	add_child(ui)
 	GameState.ui = ui
+	add_child(CoupleConversations.new())
 	GameState.shop.ensure_orders()
 	GameState.world.flag_set.connect(_on_flag)
 	TimeManager.running = true

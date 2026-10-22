@@ -14,13 +14,16 @@ func build() -> void:
 	EnvKit.flowers(self, Vector3(-4, 0, -4), 60, 4.0, [Color("fbe6ef"), Color("f7d36b"), Color("f2a3c0"), Color.WHITE], 11)
 	EnvKit.flowers(self, Vector3(6, 0, -5), 40, 3.0, [Color("f7d36b"), Color("e77f6e"), Color.WHITE], 12)
 	for i in 5:
-		EnvKit.rock(self, Vector3(-9 + i * 4.5, 0, -7.5 + (i % 2) * 15.0), 0.6 + (i % 3) * 0.2)
+		var p := Vector3(-9 + i * 4.5, 0, -7.5 + (i % 2) * 15.0)
+		if i == 1:
+			p = Vector3(-3.5, 0, 10) # keep the new picnic's walking area clear
+		EnvKit.rock(self, p, 0.6 + (i % 3) * 0.2)
 	# Gatherables: the opening tutorial needs two berries close at hand
 	add_gather("sf_berry_1", "berry_bush", Vector3(-4, 0, 3))
 	add_gather("sf_berry_2", "berry_bush", Vector3(3.5, 0, -4))
 	add_gather("sf_berry_3", "berry_bush", Vector3(-8, 0, -3))
 	add_gather("sf_flower_1", "flower_patch", Vector3(5, 0, 5))
-	add_gather("sf_flower_2", "flower_patch", Vector3(-6.5, 0, 6.5))
+	add_gather("sf_flower_2", "flower_patch", Vector3(-8, 0, 3))
 	EnvKit.sign_post(self, Vector3(1.8, 0, 6), "Home & Village: south\nWaterfall: east", 0)
 	# Butterflies
 	for i in 6:

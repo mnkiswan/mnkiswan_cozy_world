@@ -1,6 +1,35 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started Project initialization (5 steps)
+[   0% ] first_scan_filesystem | Scanning file structure...
+[  16% ] first_scan_filesystem | Loading global class names...
+[  33% ] first_scan_filesystem | Verifying GDExtensions...
+[  50% ] first_scan_filesystem | Creating autoload scripts...
+[  66% ] first_scan_filesystem | Initializing plugins...
+[  83% ] first_scan_filesystem | Starting file scan...
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started Registering global classes... (3 steps)
+[   0% ] update_scripts_classes | VillageDecor
+[  25% ] update_scripts_classes |
+[  50% ] update_scripts_classes |
+[ DONE ] update_scripts_classes
+
+[   0% ] loading_editor_layout | Started Loading editor (5 steps)
+[   0% ] loading_editor_layout | Loading editor layout...
+[  16% ] loading_editor_layout | Loading docks...
+[ DONE ] loading_editor_layout
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Checked 88 files, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+-- Boot
   [PASS] player and Swan spawned
   [PASS] opening quest started
   [PASS] start region discovered
+-- A Morning Together
   [PASS] talked to Swan
   [PASS] gathered 2 berries
   [PASS] berry bush shows picked state
@@ -10,38 +39,47 @@
   [PASS] arrived home: quest complete
   [PASS] Gentle Hands auto-started
   [PASS] reward coins paid once (5)
+-- Gentle Hands
   [PASS] talked to Thronn
   [PASS] petted an animal
   [PASS] feeding without feed is refused safely
   [PASS] took 3 Hay & Grain
   [PASS] Gentle Hands complete
   [PASS] seed rewards received
+-- Open the Stall
   [PASS] valid berry sale succeeds
   [PASS] sold 2 berries for 4 coins
   [PASS] oversell rejected, coins unchanged
   [PASS] Open the Stall complete (10 coins of sales)
   [PASS] Village Basket auto-started
+-- A Basket for the Village
   [PASS] gathered maze berries
   [PASS] picked a mango
   [PASS] basket step reached
   [PASS] basket consumed exactly 3 berries
   [PASS] basket delivered to Elder
   [PASS] park flower bed restored (world change)
+-- Farming: plant, water, sleep, harvest
   [PASS] planted rice
   [PASS] watered
   [PASS] rice ready after 2 watered days
   [PASS] harvested 2 rice
   [PASS] plot empty after harvest
   [PASS] no double harvest
+-- Eggs next morning
   [PASS] fed chicken laid an egg overnight
+-- Fishing
   [PASS] player entered fishing state
   [PASS] bite cue fired
   [PASS] caught a fish
   [PASS] fishing ended cleanly
+-- Stall upgrade & orders
   [PASS] stall upgraded to level 1
   [PASS] order board shows 2 orders
+-- Decor
   [PASS] rug placed on anchor
   [PASS] leaf charm displayed
+-- Save / load round trip
   [PASS] save succeeded
   [PASS] save file valid
   [PASS] state cleared before load
@@ -51,8 +89,17 @@
   [PASS] world flags restored
   [PASS] decor placement restored
   [PASS] stall level restored
+WARNING: Primary save invalid; trying backup
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] prepare_load (res://scripts/core/save_manager.gd:78)
+         [1] _run (res://tests/playtest.gd:254)
+         [2] _frames (res://tests/playtest.gd:36)
   [PASS] corrupt primary save falls back to backup
+
 ==== PLAYTEST: 54 passed, 0 failed ====
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
 PASS: hair and feather mesh normals point outward
 PASS: hood shell normals point outward
 PASS: Mnki is grounded
@@ -94,14 +141,218 @@ PASS: low indoor ceiling blocks takeoff
 PASS: open space below a high roof permits takeoff
 PASS: ascending respects a solid ceiling
 PASS: second save creates backup
+WARNING: Primary save invalid; trying backup
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] prepare_load (res://scripts/core/save_manager.gd:78)
+         [1] _ready (res://tests/flight_switch.gd:141)
+         [2] frames (res://tests/flight_switch.gd:151)
 PASS: corrupt primary recovers from backup
 PASS: save after corrupt primary succeeds
 PASS: corrupt primary did not overwrite valid backup
 FLIGHT & SWITCH: 44 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
 bought seeds: 2
 day after sleep: 2 saved: true
+scene: TitleMenu
 continued day: 2 coins: 42
 UI FLOW OK
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-PACKAGED BUILD CHECK: switch=true takeoff=true airborne=true landed=true
+PASS: 39 activities created
+PASS: all thirteen regions have a gathering place
+PASS: thirteen new hosts created
+PASS: 23 villagers coexist with farm animals
+PASS: host starts clear of scenery: life_sunshine_forest
+PASS: host starts clear of scenery: life_waterfall_ponds
+PASS: host starts clear of scenery: life_berry_maze
+PASS: host starts clear of scenery: life_flower_garden
+PASS: host starts clear of scenery: life_paddy_field
+PASS: host starts clear of scenery: life_tropical_forest
+PASS: host starts clear of scenery: life_animal_farm
+PASS: host starts clear of scenery: life_guardian_gate
+PASS: host starts clear of scenery: life_village_park
+PASS: host starts clear of scenery: life_treehouse
+PASS: host starts clear of scenery: life_colony_one
+PASS: host starts clear of scenery: life_colony_two
+PASS: host starts clear of scenery: life_market_square
+PASS: clear standing approach: cozy_sunshine_forest_0
+PASS: keyboard interaction can focus: cozy_sunshine_forest_0
+PASS: first completion rewards and changes prop: cozy_sunshine_forest_0
+PASS: repeat cannot duplicate reward: cozy_sunshine_forest_0
+PASS: clear standing approach: cozy_sunshine_forest_1
+PASS: keyboard interaction can focus: cozy_sunshine_forest_1
+PASS: first completion rewards and changes prop: cozy_sunshine_forest_1
+PASS: repeat cannot duplicate reward: cozy_sunshine_forest_1
+PASS: clear standing approach: cozy_sunshine_forest_2
+PASS: keyboard interaction can focus: cozy_sunshine_forest_2
+PASS: first completion rewards and changes prop: cozy_sunshine_forest_2
+PASS: repeat cannot duplicate reward: cozy_sunshine_forest_2
+PASS: clear standing approach: cozy_waterfall_ponds_0
+PASS: keyboard interaction can focus: cozy_waterfall_ponds_0
+PASS: first completion rewards and changes prop: cozy_waterfall_ponds_0
+PASS: repeat cannot duplicate reward: cozy_waterfall_ponds_0
+PASS: clear standing approach: cozy_waterfall_ponds_1
+PASS: keyboard interaction can focus: cozy_waterfall_ponds_1
+PASS: first completion rewards and changes prop: cozy_waterfall_ponds_1
+PASS: repeat cannot duplicate reward: cozy_waterfall_ponds_1
+PASS: clear standing approach: cozy_waterfall_ponds_2
+PASS: keyboard interaction can focus: cozy_waterfall_ponds_2
+PASS: first completion rewards and changes prop: cozy_waterfall_ponds_2
+PASS: repeat cannot duplicate reward: cozy_waterfall_ponds_2
+PASS: clear standing approach: cozy_berry_maze_0
+PASS: keyboard interaction can focus: cozy_berry_maze_0
+PASS: first completion rewards and changes prop: cozy_berry_maze_0
+PASS: repeat cannot duplicate reward: cozy_berry_maze_0
+PASS: clear standing approach: cozy_berry_maze_1
+PASS: keyboard interaction can focus: cozy_berry_maze_1
+PASS: first completion rewards and changes prop: cozy_berry_maze_1
+PASS: repeat cannot duplicate reward: cozy_berry_maze_1
+PASS: clear standing approach: cozy_berry_maze_2
+PASS: keyboard interaction can focus: cozy_berry_maze_2
+PASS: first completion rewards and changes prop: cozy_berry_maze_2
+PASS: repeat cannot duplicate reward: cozy_berry_maze_2
+PASS: clear standing approach: cozy_flower_garden_0
+PASS: keyboard interaction can focus: cozy_flower_garden_0
+PASS: first completion rewards and changes prop: cozy_flower_garden_0
+PASS: repeat cannot duplicate reward: cozy_flower_garden_0
+PASS: clear standing approach: cozy_flower_garden_1
+PASS: keyboard interaction can focus: cozy_flower_garden_1
+PASS: first completion rewards and changes prop: cozy_flower_garden_1
+PASS: repeat cannot duplicate reward: cozy_flower_garden_1
+PASS: clear standing approach: cozy_flower_garden_2
+PASS: keyboard interaction can focus: cozy_flower_garden_2
+PASS: first completion rewards and changes prop: cozy_flower_garden_2
+PASS: repeat cannot duplicate reward: cozy_flower_garden_2
+PASS: clear standing approach: cozy_paddy_field_0
+PASS: keyboard interaction can focus: cozy_paddy_field_0
+PASS: first completion rewards and changes prop: cozy_paddy_field_0
+PASS: repeat cannot duplicate reward: cozy_paddy_field_0
+PASS: clear standing approach: cozy_paddy_field_1
+PASS: keyboard interaction can focus: cozy_paddy_field_1
+PASS: first completion rewards and changes prop: cozy_paddy_field_1
+PASS: repeat cannot duplicate reward: cozy_paddy_field_1
+PASS: clear standing approach: cozy_paddy_field_2
+PASS: keyboard interaction can focus: cozy_paddy_field_2
+PASS: first completion rewards and changes prop: cozy_paddy_field_2
+PASS: repeat cannot duplicate reward: cozy_paddy_field_2
+PASS: clear standing approach: cozy_tropical_forest_0
+PASS: keyboard interaction can focus: cozy_tropical_forest_0
+PASS: first completion rewards and changes prop: cozy_tropical_forest_0
+PASS: repeat cannot duplicate reward: cozy_tropical_forest_0
+PASS: clear standing approach: cozy_tropical_forest_1
+PASS: keyboard interaction can focus: cozy_tropical_forest_1
+PASS: first completion rewards and changes prop: cozy_tropical_forest_1
+PASS: repeat cannot duplicate reward: cozy_tropical_forest_1
+PASS: clear standing approach: cozy_tropical_forest_2
+PASS: keyboard interaction can focus: cozy_tropical_forest_2
+PASS: first completion rewards and changes prop: cozy_tropical_forest_2
+PASS: repeat cannot duplicate reward: cozy_tropical_forest_2
+PASS: clear standing approach: cozy_animal_farm_0
+PASS: keyboard interaction can focus: cozy_animal_farm_0
+PASS: first completion rewards and changes prop: cozy_animal_farm_0
+PASS: repeat cannot duplicate reward: cozy_animal_farm_0
+PASS: clear standing approach: cozy_animal_farm_1
+PASS: keyboard interaction can focus: cozy_animal_farm_1
+PASS: first completion rewards and changes prop: cozy_animal_farm_1
+PASS: repeat cannot duplicate reward: cozy_animal_farm_1
+PASS: clear standing approach: cozy_animal_farm_2
+PASS: keyboard interaction can focus: cozy_animal_farm_2
+PASS: first completion rewards and changes prop: cozy_animal_farm_2
+PASS: repeat cannot duplicate reward: cozy_animal_farm_2
+PASS: clear standing approach: cozy_guardian_gate_0
+PASS: keyboard interaction can focus: cozy_guardian_gate_0
+PASS: first completion rewards and changes prop: cozy_guardian_gate_0
+PASS: repeat cannot duplicate reward: cozy_guardian_gate_0
+PASS: clear standing approach: cozy_guardian_gate_1
+PASS: keyboard interaction can focus: cozy_guardian_gate_1
+PASS: first completion rewards and changes prop: cozy_guardian_gate_1
+PASS: repeat cannot duplicate reward: cozy_guardian_gate_1
+PASS: clear standing approach: cozy_guardian_gate_2
+PASS: keyboard interaction can focus: cozy_guardian_gate_2
+PASS: first completion rewards and changes prop: cozy_guardian_gate_2
+PASS: repeat cannot duplicate reward: cozy_guardian_gate_2
+PASS: clear standing approach: cozy_village_park_0
+PASS: keyboard interaction can focus: cozy_village_park_0
+PASS: first completion rewards and changes prop: cozy_village_park_0
+PASS: repeat cannot duplicate reward: cozy_village_park_0
+PASS: clear standing approach: cozy_village_park_1
+PASS: keyboard interaction can focus: cozy_village_park_1
+PASS: first completion rewards and changes prop: cozy_village_park_1
+PASS: repeat cannot duplicate reward: cozy_village_park_1
+PASS: clear standing approach: cozy_village_park_2
+PASS: keyboard interaction can focus: cozy_village_park_2
+PASS: first completion rewards and changes prop: cozy_village_park_2
+PASS: repeat cannot duplicate reward: cozy_village_park_2
+PASS: clear standing approach: cozy_treehouse_0
+PASS: keyboard interaction can focus: cozy_treehouse_0
+PASS: first completion rewards and changes prop: cozy_treehouse_0
+PASS: repeat cannot duplicate reward: cozy_treehouse_0
+PASS: clear standing approach: cozy_treehouse_1
+PASS: keyboard interaction can focus: cozy_treehouse_1
+PASS: first completion rewards and changes prop: cozy_treehouse_1
+PASS: repeat cannot duplicate reward: cozy_treehouse_1
+PASS: clear standing approach: cozy_treehouse_2
+PASS: keyboard interaction can focus: cozy_treehouse_2
+PASS: first completion rewards and changes prop: cozy_treehouse_2
+PASS: repeat cannot duplicate reward: cozy_treehouse_2
+PASS: clear standing approach: cozy_colony_one_0
+PASS: keyboard interaction can focus: cozy_colony_one_0
+PASS: first completion rewards and changes prop: cozy_colony_one_0
+PASS: repeat cannot duplicate reward: cozy_colony_one_0
+PASS: clear standing approach: cozy_colony_one_1
+PASS: keyboard interaction can focus: cozy_colony_one_1
+PASS: first completion rewards and changes prop: cozy_colony_one_1
+PASS: repeat cannot duplicate reward: cozy_colony_one_1
+PASS: clear standing approach: cozy_colony_one_2
+PASS: keyboard interaction can focus: cozy_colony_one_2
+PASS: first completion rewards and changes prop: cozy_colony_one_2
+PASS: repeat cannot duplicate reward: cozy_colony_one_2
+PASS: clear standing approach: cozy_colony_two_0
+PASS: keyboard interaction can focus: cozy_colony_two_0
+PASS: first completion rewards and changes prop: cozy_colony_two_0
+PASS: repeat cannot duplicate reward: cozy_colony_two_0
+PASS: clear standing approach: cozy_colony_two_1
+PASS: keyboard interaction can focus: cozy_colony_two_1
+PASS: first completion rewards and changes prop: cozy_colony_two_1
+PASS: repeat cannot duplicate reward: cozy_colony_two_1
+PASS: clear standing approach: cozy_colony_two_2
+PASS: keyboard interaction can focus: cozy_colony_two_2
+PASS: first completion rewards and changes prop: cozy_colony_two_2
+PASS: repeat cannot duplicate reward: cozy_colony_two_2
+PASS: clear standing approach: cozy_market_square_0
+PASS: keyboard interaction can focus: cozy_market_square_0
+PASS: first completion rewards and changes prop: cozy_market_square_0
+PASS: repeat cannot duplicate reward: cozy_market_square_0
+PASS: clear standing approach: cozy_market_square_1
+PASS: keyboard interaction can focus: cozy_market_square_1
+PASS: first completion rewards and changes prop: cozy_market_square_1
+PASS: repeat cannot duplicate reward: cozy_market_square_1
+PASS: clear standing approach: cozy_market_square_2
+PASS: keyboard interaction can focus: cozy_market_square_2
+PASS: first completion rewards and changes prop: cozy_market_square_2
+PASS: repeat cannot duplicate reward: cozy_market_square_2
+PASS: all thirteen places unlock the shared keepsake
+PASS: daily completion survives serialization
+PASS: new day resets daily visuals and eligibility
+PASS: activity presents a real dialogue choice
+PASS: declining does not change rewards or world
+PASS: accepting on a new day grants one reward
+PASS: remote completion is rejected
+PASS: chat waits for 35 seconds of inactivity
+PASS: idle conversation starts without blocking controls
+PASS: conversation passes from Mnki to Swan
+PASS: movement input interrupts immediately
+PASS: interrupted chatter has a long cooldown
+PASS: next conversation avoids repeating the last
+PASS: opening a menu hides conversation
+PASS: speaker identity follows character switching
+PASS: flight suppresses idle chat
+PASS: accessibility setting disables idle chat
+PASS: NPC movement pauses during menus
+PASS: closing host greeting does not count a visit
+PASS: host remembers a friendly visit
+PASS: repeated chat counts only one day of friendship
+PASS: NPC capsule steering respects a blocking wall
+VILLAGE LIFE: 195 passed, 0 failed

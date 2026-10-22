@@ -7,12 +7,16 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'downloads'
 OUT.mkdir(exist_ok=True)
 names = []
-instructions = '''MNKISWAN: Cozy World — Wings & Friends v0.2.0
+instructions = '''MNKISWAN: Cozy World — Living Village v0.3.0
 Built with Godot 4.7.2. Extract the full ZIP before running the executable.
 C switches Mnki / Swan on the ground. As Swan: F takeoff / landing, Space rise,
 Ctrl descend, WASD steer, Shift fly faster. Release the controls to hover.
 E interact, Tab inventory, J journal, M map, Esc pause. Controls are remappable.
 Six gold sky-feather rings are marked on the map. No timer or stamina penalty.
+13 gathering places, 39 activities, and 23 villagers. Teal diamonds on the map
+mark gathering places. Journal > Village life tracks memories and friendship.
+Stand quietly together for 35 seconds to hear Mnki and Swan chat. Moving or
+opening a menu ends the conversation. Toggle quiet conversations in Settings.
 Save in the pause menu. Airborne saves resume at the last safe ground position.
 Linux: chmod +x MNKISWAN_Cozy_World.x86_64 if needed, then run it.
 Windows: run MNKISWAN_Cozy_World.exe. Godot is not needed to play.
@@ -30,13 +34,13 @@ for platform, executable, label in [('windows', 'MNKISWAN_Cozy_World.exe', 'Wind
             z.write(ROOT / 'docs' / license_name, license_name)
     names.append(name)
 
-source = 'MNKISWAN_Cozy_World_Source_0.2.0.zip'
+source = 'MNKISWAN_Cozy_World_Source_0.3.0.zip'
 excluded = {'.git', '.godot', 'builds', 'downloads', 'export', '__pycache__'}
 with zipfile.ZipFile(OUT / source, 'w', zipfile.ZIP_DEFLATED, compresslevel=8) as z:
     for path in sorted(ROOT.rglob('*')):
         rel = path.relative_to(ROOT)
         if path.is_file() and not excluded.intersection(rel.parts) and path.suffix not in {'.tmp', '.log'}:
-            z.write(path, Path('MNKISWAN_Cozy_World_0.2.0') / rel)
+            z.write(path, Path('MNKISWAN_Cozy_World_0.3.0') / rel)
 names.append(source)
 hashes = []
 for name in names:

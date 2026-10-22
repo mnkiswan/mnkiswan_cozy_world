@@ -4,10 +4,18 @@ extends RegionBase
 
 func build() -> void:
 	# Cliff + waterfall landmark (visible from the approach)
-	EnvKit.solid_box(self, Vector3(30, 7.5, 4), Vector3(0, 3.75, -13), Color("98a3a0"), 0.0, 0.0)
-	for i in 9:
-		EnvKit.rock(self, Vector3(-13 + i * 3.3, 6.8, -12.5 + (i % 2)), 1.6, false)
-		EnvKit.bush(self, Vector3(-12 + i * 3.1, 7.4, -13.5), 1.3, Color("5a9e55"))
+	# Staggered rock columns replace the rectangular wall while retaining a simple solid core.
+	EnvKit.invisible_wall(self, Vector3(30, 4.0, 4), Vector3(0, 2.0, -13))
+	for i in 13:
+		var x := -14.0 + i * 2.3
+		var height := 5.2 + sin(i * 1.7) * 0.6 + (2.0 if absf(x - 3.0) < 4.0 else 0.0)
+		var stone := Color("7c918b").lightened(float(i % 3) * 0.035)
+		EnvKit.invisible_wall(self, Vector3(2.3, height, 2.5), Vector3(x, height * 0.5, -12.5))
+		CharParts.add(self, CharParts.cyl_mesh(1.3, 1.8, height, 7), CharParts.mat(stone), Vector3(x, height * 0.5, -12.5), Vector3(0, i * 23, 0), Vector3(1.0, 1.0, 1.5))
+		CharParts.add(self, CharParts.sphere_mesh(1.0, 10), CharParts.mat(Color("739271")), Vector3(x, height - 0.1, -12.6), Vector3.ZERO, Vector3(1.45, 0.35, 1.9))
+		if i % 2 == 0:
+			EnvKit.rock(self, Vector3(x, height - 0.2, -12.8), 0.9, false)
+			EnvKit.bush(self, Vector3(x, height + 0.2, -13.2), 0.9, Color("5a9e55"))
 	var fall := CharParts.add(self, QuadMesh.new(), EnvKit.waterfall_material(), Vector3(3, 3.6, -10.95))
 	(fall.mesh as QuadMesh).size = Vector2(4.0, 7.2)
 	fall.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF

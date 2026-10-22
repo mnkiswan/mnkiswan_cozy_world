@@ -7,7 +7,7 @@ config_version=5
 
 config/name="MNKISWAN: Cozy World"
 config/description="A tiny living world, built around two best friends — Mnki and Swan."
-config/version="0.2.0-wings-and-friends"
+config/version="0.3.0-living-village"
 run/main_scene="res://scenes/menus/title_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.984, 0.969, 0.929, 1)

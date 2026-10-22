@@ -20,6 +20,25 @@ const TEAL := Color("78c9d4")
 static var _water_mat: ShaderMaterial
 static var _ground_mat: ShaderMaterial
 static var _fall_mat: ShaderMaterial
+static var _path_mat: ShaderMaterial
+
+static func path_material() -> ShaderMaterial:
+	if _path_mat == null:
+		var shader := Shader.new()
+		shader.code = """
+shader_type spatial;
+render_mode specular_disabled;
+void fragment() {
+    vec3 w = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    float grain = fract(sin(dot(floor(w.xz * 16.0), vec2(12.9898, 78.233))) * 43758.5453);
+    float patches = sin(w.x * 2.1) * sin(w.z * 1.7) * 0.025;
+    ALBEDO = vec3(0.51, 0.40, 0.25) + vec3(grain * 0.045 + patches);
+    ROUGHNESS = 1.0;
+}
+"""
+		_path_mat = ShaderMaterial.new()
+		_path_mat.shader = shader
+	return _path_mat
 
 const WATER_SHADER := """
 shader_type spatial;
@@ -345,7 +364,7 @@ static func path_segment(parent: Node3D, a: Vector3, b: Vector3, width: float = 
 	if length < 0.1:
 		return
 	var mid := (a + b) * 0.5
-	var mi := CharParts.add(parent, CharParts.box_mesh(Vector3(width, 0.04, length + width * 0.6)), CharParts.mat(PATH), Vector3(mid.x, 0.02, mid.z))
+	var mi := CharParts.add(parent, CharParts.box_mesh(Vector3(width, 0.04, length + width * 0.6)), path_material(), Vector3(mid.x, 0.02, mid.z))
 	mi.rotation.y = atan2(d.x, d.z)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# stepping stones along the edges for a crafted look

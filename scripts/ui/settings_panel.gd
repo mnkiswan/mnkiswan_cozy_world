@@ -41,6 +41,7 @@ func build_content() -> void:
 	tabs.add_child(acc)
 	_check(acc, "Run is a toggle (instead of hold)", "run_toggle")
 	_check(acc, "Easier fishing (wider bite window)", "fishing_easy")
+	_check(acc, "Mnki and Swan chat during quiet moments", "idle_conversations")
 	var wm := HBoxContainer.new()
 	acc.add_child(wm)
 	var wl := UITheme.label("Window mode", 24)

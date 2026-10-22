@@ -148,10 +148,17 @@ func _show_line() -> void:
 			var idx := i
 			var b := UITheme.button("%d. %s" % [i + 1, String(choices[i])], func(): _choose(idx), 260)
 			_choices.add_child(b)
-		(_choices.get_child(0) as Button).call_deferred("grab_focus")
+		_focus_choice.call_deferred(_choices.get_child(0))
+
+func _focus_choice(button: Button) -> void:
+	if is_instance_valid(button) and button.is_inside_tree() and button.is_visible_in_tree():
+		button.grab_focus()
 
 
 func _npc_id_for(speaker: String) -> String:
+	for region in VillageLifeData.PLACES:
+		if VillageLifeData.PLACES[region][2] == speaker:
+			return VillageLifeData.host_id(region)
 	for id in NpcDB.NPCS:
 		if String(NpcDB.NPCS[id].name) == speaker:
 			return id

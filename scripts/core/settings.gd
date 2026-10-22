@@ -15,6 +15,7 @@ const DEFAULTS := {
 	"invert_y": false,
 	"run_toggle": false,
 	"fishing_easy": false,
+	"idle_conversations": true,
 	"reduced_motion": false,
 	"camera_shake": true,
 	"window_mode": "windowed",

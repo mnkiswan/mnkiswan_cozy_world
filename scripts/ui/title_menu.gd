@@ -54,7 +54,7 @@ func _ready() -> void:
 	_add_btn("Credits", func(): _credits.visible = true)
 	_add_btn("Quit", func(): get_tree().quit())
 	(_buttons.get_child(0) as Button).call_deferred("grab_focus")
-	var ver := UITheme.label("Wings & Friends · v0.2.0 · Single-player", 18, UITheme.MUTED)
+	var ver := UITheme.label("Living Village · v0.3.0 · Single-player", 18, UITheme.MUTED)
 	UITheme.place(ver, Control.PRESET_BOTTOM_LEFT, Vector2(24, -44))
 	add_child(ver)
 	_build_confirm()

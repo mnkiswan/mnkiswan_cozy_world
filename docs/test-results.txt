@@ -1,0 +1,145 @@
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started Project initialization (5 steps)
+[   0% ] first_scan_filesystem | Scanning file structure...
+[  16% ] first_scan_filesystem | Loading global class names...
+[  33% ] first_scan_filesystem | Verifying GDExtensions...
+[  50% ] first_scan_filesystem | Creating autoload scripts...
+[  66% ] first_scan_filesystem | Initializing plugins...
+[  83% ] first_scan_filesystem | Starting file scan...
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started Registering global classes... (2 steps)
+[   0% ] update_scripts_classes | CozyWorld
+[  33% ] update_scripts_classes | 
+[ DONE ] update_scripts_classes
+
+[   0% ] loading_editor_layout | Started Loading editor (5 steps)
+[   0% ] loading_editor_layout | Loading editor layout...
+[  16% ] loading_editor_layout | Loading docks...
+[ DONE ] loading_editor_layout
+
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS · new game schema is valid
+PASS · unknown items rejected
+PASS · negative item quantities rejected
+PASS · negative sales rejected
+PASS · invalid sale ID rejected
+PASS · incomplete request cannot pay
+PASS · ripe gathering awards expected yield
+PASS · gathering cannot duplicate a picked source
+PASS · request ingredients protected from sales
+PASS · reserved items cannot be sold
+PASS · ready request consumes ingredients and pays
+PASS · repeated request cannot duplicate reward
+PASS · delivery consumes exact quantities
+PASS · newly unlocked order reserves correct fruit
+PASS · surplus sale succeeds
+PASS · sale is balanced
+PASS · overselling leaves state intact
+PASS · invalid seed rejected
+PASS · seed plants on empty plot
+PASS · occupied plot cannot consume second seed
+PASS · immature crop cannot be harvested
+PASS · unwatered crops wait safely
+PASS · watering starts growth
+PASS · double watering cannot duplicate progress
+PASS · mature crop yields three items
+PASS · double harvest prevented
+PASS · invalid care action rejected
+PASS · egg unavailable before feeding
+PASS · feeding without accepted food does not create progress
+PASS · feeding consumes accepted food
+PASS · fed hen provides one egg
+PASS · daily output cannot duplicate
+PASS · all three species advance animal friendship once
+PASS · first catch guaranteed common species
+PASS · later fishing records catch collection
+PASS · storage transfer keeps exact counts
+PASS · storage retrieval keeps exact counts
+PASS · negative storage movement rejected
+PASS · storage cannot duplicate absent items
+PASS · decoration purchase succeeds
+PASS · unique decor cannot charge twice
+PASS · owned decor can be placed
+PASS · moving decor does not duplicate it
+PASS · unowned decor cannot be placed
+PASS · invalid anchor rejected
+PASS · two distinct owned decorations count
+PASS · guardian clue cannot count twice
+PASS · region discovery counts once
+PASS · atomic save writes valid primary
+PASS · second save rotates verified backup
+PASS · reload restores primary state
+PASS · mid-growth crop survives load
+PASS · quest and decoration persistence
+PASS · animal output persistence
+PASS · reload cannot reset completed reward
+PASS · corrupt primary recovers previous verified backup
+PASS · negative inventory in save rejected
+PASS · unknown crop in save rejected
+PASS · malformed saved position rejected
+PASS · unsupported future schema safely rejected
+PASS · rest grows watered crops
+PASS · care resumes on next day
+PASS · full bag leaves gathering source untouched
+PASS · full bag cannot lose a fish or award phantom progress
+PASS · insufficient funds preserve balance
+PASS · unaffordable improvement is atomic
+PASS · three stall upgrades succeed in order
+PASS · stall tier capped at four
+PASS · story request: A little sunshine
+PASS · story request: Pondside picnic
+PASS · story request: Friends with feathers & fur
+PASS · story request: Small beginnings
+PASS · story request: From seed to supper
+PASS · story request: Colors for the village
+PASS · story request: Our first market day
+PASS · story request: Room for good things
+PASS · story request: The three guardians
+PASS · story request: Make it ours
+PASS · story request: A world worth returning to
+PASS · entire 12-request story reaches festival
+PASS · completed world remains valid
+STATE TESTS: 81 passed, 0 failed
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS · player starts on solid ground
+PASS · keyboard input moves CharacterBody3D through world
+PASS · movement stays grounded
+PASS · fall recovery preserves inventory and returns to safe ground
+PASS · edge recovery returns to an inset safe location
+PASS · Swan follows player route without falling behind
+PASS · companion respects terrain collision
+PASS · interaction scanner focuses nearest reachable berry bush
+PASS · focused world interaction actually awards berries
+PASS · repeated world interaction cannot duplicate gathering
+PASS · opening inventory pauses world time
+PASS · menus suspend player input and companion route
+PASS · closing menu resumes simulation
+PASS · door transitions to real home interior
+PASS · spring arm retracts against interior wall
+PASS · upper floor transition lands on solid second storey
+PASS · home exit returns safely to village
+PASS · early reel gives no fish and preserves active fishing
+PASS · bite window catch completes once and releases movement
+PASS · inactive fishing cannot grant repeated fish
+PASS · missed bite cancels without a reward and restores movement
+PASS · every named region discovers through world position
+PASS · all major menus construct with populated world state
+PASS · world position and system state save/load together
+PASS · festival visibly gathers all villagers in the park
+WORLD TESTS: 25 passed, 0 failed
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SMOKE PASS: world, 13 regions, 8 NPCs, home, all UI screens, save/load
+
+NATIVE LINUX RELEASE
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SMOKE PASS: world, 13 regions, 8 NPCs, home, all UI screens, save/load

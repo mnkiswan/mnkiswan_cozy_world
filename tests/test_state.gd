@@ -1,0 +1,150 @@
+extends SceneTree
+const D = preload("res://scripts/game_data.gd")
+var state: Node
+var passed = 0
+var failed = 0
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func check(condition: bool, label: String) -> void:
+	if condition:
+		passed += 1
+		print("PASS · "+label)
+	else:
+		failed += 1
+		push_error("FAIL · "+label)
+
+func run() -> void:
+	state=root.get_node("State")
+	state.save_path="user://tests/isolated_world.json"
+	DirAccess.make_dir_recursive_absolute("user://tests")
+	state.reset()
+	check(state.validate(state.data),"new game schema is valid")
+	check(not state.add_item("unknown",1),"unknown items rejected")
+	check(not state.add_item("berry",-1),"negative item quantities rejected")
+	check(not state.sell("berry",-2),"negative sales rejected")
+	check(not state.sell("unknown",1),"invalid sale ID rejected")
+	check(not state.claim_quest("welcome"),"incomplete request cannot pay")
+	check(state.gather("test_bush","berry",3),"ripe gathering awards expected yield")
+	check(not state.gather("test_bush","berry",3) and state.count("berry")==3,"gathering cannot duplicate a picked source")
+	check(state.reserved("berry")==3 and state.sellable("berry")==0,"request ingredients protected from sales")
+	check(not state.sell("berry",1),"reserved items cannot be sold")
+	check(state.claim_quest("welcome"),"ready request consumes ingredients and pays")
+	var coins=state.data.coins
+	check(not state.claim_quest("welcome") and state.data.coins==coins,"repeated request cannot duplicate reward")
+	check(state.count("berry")==0,"delivery consumes exact quantities")
+	state.add_item("mango",4)
+	check(state.sellable("mango")==2,"newly unlocked order reserves correct fruit")
+	check(state.sell("mango",2),"surplus sale succeeds")
+	check(state.data.coins==coins+10 and state.count("mango")==2,"sale is balanced")
+	check(not state.sell("mango",3),"overselling leaves state intact")
+	check(not state.plant("plot","unknown"),"invalid seed rejected")
+	check(state.plant("plot","rice"),"seed plants on empty plot")
+	check(not state.plant("plot","rice"),"occupied plot cannot consume second seed")
+	check(not state.harvest("plot"),"immature crop cannot be harvested")
+	state.tick(150)
+	check(state.data.plots.plot.growth==0,"unwatered crops wait safely")
+	check(state.water("plot"),"watering starts growth")
+	check(not state.water("plot"),"double watering cannot duplicate progress")
+	state.tick(120)
+	check(state.harvest("plot") and state.count("rice")==3,"mature crop yields three items")
+	check(not state.harvest("plot") and state.count("rice")==3,"double harvest prevented")
+	check(not state.care("cow","unknown"),"invalid care action rejected")
+	check(not state.care("chicken","egg"),"egg unavailable before feeding")
+	check(not state.care("cow","feed"),"feeding without accepted food does not create progress")
+	state.add_item("berry",2)
+	check(state.care("chicken","feed"),"feeding consumes accepted food")
+	check(state.care("chicken","egg") and state.count("egg")==1,"fed hen provides one egg")
+	check(not state.care("chicken","egg") and state.count("egg")==1,"daily output cannot duplicate")
+	check(state.care("cow","pet") and state.care("sheep","brush") and state.metric("animal_friends")==3,"all three species advance animal friendship once")
+	check(state.catch_fish() and state.count("fish")==1,"first catch guaranteed common species")
+	check(state.catch_fish() and state.metric("caught")==2,"later fishing records catch collection")
+	check(state.transfer("fish",1,true) and state.count("fish")==0 and state.data.storage.fish==1,"storage transfer keeps exact counts")
+	check(state.transfer("fish",1,false) and state.count("fish")==1,"storage retrieval keeps exact counts")
+	check(not state.transfer("fish",-1,true),"negative storage movement rejected")
+	check(not state.transfer("fish",2,true),"storage cannot duplicate absent items")
+	state.data.coins=100
+	check(state.buy_decor("rug"),"decoration purchase succeeds")
+	var after_buy=state.data.coins
+	check(not state.buy_decor("rug") and state.data.coins==after_buy,"unique decor cannot charge twice")
+	check(state.place_decor("rug",0),"owned decor can be placed")
+	check(state.place_decor("rug",1) and state.data.decor_placed.size()==1,"moving decor does not duplicate it")
+	check(not state.place_decor("lamp",2),"unowned decor cannot be placed")
+	check(not state.place_decor("rug",99),"invalid anchor rejected")
+	check(state.place_decor("basket",0) and state.metric("decorated")==2,"two distinct owned decorations count")
+	check(state.guardian("land") and not state.guardian("land"),"guardian clue cannot count twice")
+	check(state.discover("pond") and not state.discover("pond"),"region discovery counts once")
+	state.plant("persistent_plot","carrot")
+	state.water("persistent_plot")
+	state.tick(25)
+	check(state.save_game(),"atomic save writes valid primary")
+	var snapshot: Dictionary=state.data.duplicate(true)
+	state.data.coins+=1
+	check(state.save_game(),"second save rotates verified backup")
+	state.reset()
+	check(state.load_game() and state.data.coins==snapshot.coins+1,"reload restores primary state")
+	check(state.data.plots.persistent_plot.growth==25 and state.data.plots.persistent_plot.watered,"mid-growth crop survives load")
+	check(state.data.completed.has("welcome") and state.data.decor_placed.size()==2,"quest and decoration persistence")
+	check(state.data.animals.chicken.egg==snapshot.animals.chicken.egg,"animal output persistence")
+	check(not state.claim_quest("welcome"),"reload cannot reset completed reward")
+	var file=FileAccess.open(state.save_path,FileAccess.WRITE)
+	file.store_string('{"version":1,"coins":999999}')
+	file.close()
+	check(state.load_game() and state.data.coins==snapshot.coins,"corrupt primary recovers previous verified backup")
+	var bad: Dictionary=state.data.duplicate(true)
+	bad.inventory.berry=-1
+	check(not state.validate(bad),"negative inventory in save rejected")
+	bad=state.data.duplicate(true)
+	bad.plots.persistent_plot.crop="unknown"
+	check(not state.validate(bad),"unknown crop in save rejected")
+	bad=state.data.duplicate(true)
+	bad.position=["broken",0,0]
+	check(not state.validate(bad),"malformed saved position rejected")
+	bad=state.data.duplicate(true)
+	bad.version=99
+	check(not state.validate(bad),"unsupported future schema safely rejected")
+	state.rest()
+	check(state.data.plots.persistent_plot.growth>=D.CROPS.carrot.seconds,"rest grows watered crops")
+	check(state.care("chicken","feed"),"care resumes on next day")
+	state.reset()
+	state.add_item("rice",120)
+	check(not state.gather("full_source","berry",2) and not state.data.gathered.has("full_source"),"full bag leaves gathering source untouched")
+	check(not state.catch_fish() and state.metric("caught")==0,"full bag cannot lose a fish or award phantom progress")
+	state.reset()
+	state.data.coins=1
+	check(not state.buy_seed("rice") and state.data.coins==1,"insufficient funds preserve balance")
+	check(not state.upgrade() and state.data.stall_tier==0,"unaffordable improvement is atomic")
+	state.data.coins=1000
+	check(state.upgrade() and state.upgrade() and state.upgrade(),"three stall upgrades succeed in order")
+	check(not state.upgrade() and state.data.stall_tier==3,"stall tier capped at four")
+	# Complete the full story through real transaction APIs, including pre-owned resources.
+	state.reset()
+	state.add_item("berry",12)
+	state.add_item("mango",4)
+	state.add_item("banana",4)
+	state.add_item("flower",5)
+	state.catch_fish()
+	for a in ["cow","sheep","chicken"]: state.care(a,"pet")
+	for i in range(2):
+		state.plant("end_plot_%d" % i,"rice")
+		state.water("end_plot_%d" % i)
+	state.rest()
+	state.harvest("end_plot_0")
+	state.harvest("end_plot_1")
+	for id in ["land","water","forest"]: state.guardian(id)
+	for r in D.REGIONS: state.discover(r.id)
+	state.claim_quest("welcome")
+	state.sell("rice",6)
+	state.sell("banana",2)
+	state.upgrade()
+	state.buy_decor("rug")
+	state.place_decor("rug",0)
+	state.place_decor("basket",1)
+	for q in D.QUESTS:
+		if not q.id in state.data.completed: check(state.claim_quest(q.id),"story request: "+q.title)
+	check(state.data.completed.size()==12 and "festival" in state.data.flags,"entire 12-request story reaches festival")
+	check(state.validate(state.data),"completed world remains valid")
+	await process_frame
+	print("STATE TESTS: %d passed, %d failed" % [passed,failed])
+	quit(1 if failed>0 else 0)

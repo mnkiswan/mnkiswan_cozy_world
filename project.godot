@@ -1,0 +1,31 @@
+; MNKISWAN: Cozy World — Godot 4.7.2
+config_version=5
+
+[application]
+config/name="MNKISWAN · Cozy World"
+config/description="A little world worth returning to — together."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://assets/icon.svg"
+
+[autoload]
+State="*res://scripts/game_state.gd"
+Sound="*res://scripts/sound.gd"
+
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/size/window_width_override=1280
+window/size/window_height_override=800
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.82, 0.89, 0.83, 1)
+anti_aliasing/quality/msaa_3d=2
+
+[audio]
+driver/enable_input=false

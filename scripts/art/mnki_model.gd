@@ -162,10 +162,10 @@ func _build_headband(hc: Node3D) -> void:
 	CharParts.sphere(orn, 0.022, GOLD, Vector3(0, -0.045, -0.005), Vector3(1.4, 0.9, 0.8), 0.006)
 
 
-func _animate_extras(_delta: float, s: float) -> void:
+func _animate_extras(delta: float, s: float) -> void:
 	if tail:
 		# Secondary motion: lazy sway at idle, lag & lift while running.
 		var sway := sin(_time * 1.6) * deg_to_rad(10.0) + sin(_phase) * deg_to_rad(8.0) * s
-		tail.rotation.y = lerpf(tail.rotation.y, sway, 0.12)
-		tail.rotation.x = lerpf(tail.rotation.x, deg_to_rad(-6.0) * s + sin(_time * 2.3) * deg_to_rad(3.0), 0.1)
-		tail.rotation.z = lerpf(tail.rotation.z, sin(_time * 1.1) * deg_to_rad(5.0), 0.1)
+		tail.rotation.y = lerpf(tail.rotation.y, sway, 1.0 - exp(-7.67 * delta))
+		tail.rotation.x = lerpf(tail.rotation.x, deg_to_rad(-6.0) * s + sin(_time * 2.3) * deg_to_rad(3.0), 1.0 - exp(-6.322 * delta))
+		tail.rotation.z = lerpf(tail.rotation.z, sin(_time * 1.1) * deg_to_rad(5.0), 1.0 - exp(-6.322 * delta))

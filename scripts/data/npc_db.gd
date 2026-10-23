@@ -29,6 +29,8 @@ const NPCS := {
 }
 
 static func get_def(id: String) -> Dictionary:
+	if DailyLifeData.RESIDENTS.has(id):
+		return DailyLifeData.RESIDENTS[id]
 	var host := VillageLifeData.host_def(id)
 	if not host.is_empty():
 		return host

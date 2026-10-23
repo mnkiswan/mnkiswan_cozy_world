@@ -1,12 +1,14 @@
-# MNKISWAN: Cozy World — Living Village
+# MNKISWAN: Cozy World — Days Together
 
-Godot **4.7.2**, version **0.3.0**. Explore thirteen connected regions with **23 villagers, 39 new activities, flowering scenery, and quiet conversations between Mnki and Swan**. Both characters remain playable, and Swan can fly. This continues the owner's uploaded Claude project and the Wings & Friends revision.
+Godot **4.7.2**, version **0.4.0**. A playable 3D village built around daily life with Mnki and Swan: **31 villagers with work, play, rest and sleep routines; a lantern market; and optional shared rituals**. Both characters remain playable and Swan can fly. This continues the owner's uploaded Claude project and earlier revisions.
+
+Read the [complete project audit](docs/PROJECT_AUDIT.md), [daily-life guide](docs/DAYS_TOGETHER.md), and [validation report](docs/VALIDATION.md). This remains a procedural prototype with production art, deeper social behavior and other work outstanding.
 
 ## Download and play
 
 - [Windows x64 game ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Windows_x64.zip)
 - [Linux x64 game ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Linux_x64.zip)
-- [Godot 4.7.2 source ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Source_0.3.0.zip)
+- [Godot 4.7.2 source ZIP](https://github.com/mnkiswan/mnkiswan_cozy_world/raw/refs/heads/main/downloads/MNKISWAN_Cozy_World_Source_0.4.0.zip)
 
 Extract the whole ZIP first. On Windows, run `MNKISWAN_Cozy_World.exe`; Godot is not required to play. On Linux, run `./MNKISWAN_Cozy_World.x86_64` (use `chmod +x MNKISWAN_Cozy_World.x86_64` if your extractor removes executable permissions).
 
@@ -26,7 +28,8 @@ To edit, extract the **source ZIP**, open Godot **4.7.2**, choose **Import**, se
 | E | Talk, gather, farm, fish and interact |
 | R | Change seed |
 | Tab / I, J, M | Inventory, journal, map |
-| Esc | Pause or close a menu; cancel fishing |
+| H | Our days together / Village day |
+| Esc | Pause, close a menu, cancel fishing or finish a shared ritual |
 
 Actions can be rebound in Settings. Flight has no stamina penalty. Release movement to hover; press F for a gentle landing. Land before switching. Mnki waits on the ground while Swan flies and rejoins after she lands. Low ceilings block takeoff, solid roofs stop ascent, and flight stays within the village boundary and a 24 m altitude limit.
 
@@ -36,16 +39,17 @@ Both characters share inventory, coins, quests and tools. Saves remember the sel
 
 ## What's changed
 
-![Mnki and Swan sharing a quiet moment](docs/screenshots/life_conversation.png)
+![Children playing and elders resting in the park](docs/screenshots/days_park_morning.png)
 
-[See all thirteen locations and the evening market](docs/screenshots/LIVING_VILLAGE.md).
+[See the daily-life screenshots](docs/screenshots/DAYS_TOGETHER.md).
 
-- Thirteen gathering places with new hosts, open pergolas, striped awnings, hanging lights, climbing leaves, and flower borders.
-- **39 activities**: share tea, tend flowers, arrange gift baskets, refill bird feeders, turn waterwheels, light lanterns, and play chimes. Props change when used. Each activity rewards two coins once per day; repeats remain available without extra rewards.
-- **23 villagers** in total. New hosts stroll, greet you, explain their activities, offer wisdom, and remember the days you stop to chat. Capsule sweeps keep villagers from walking straight through scenery; blocked routes wait rather than teleport.
-- Stay still together on the ground for **35 seconds** to begin an occasional, two-way conversation about love, kindness, rest, and the place you're visiting. Movement, camera input, menus, flight, or switching interrupt it. Conversations leave controls active, use the correct character portraits, and have a long cooldown. Disable them in Settings → Gameplay & Display.
-- **Map:** teal diamonds mark gathering places. **Journal → Village life:** track activities and friendship visits. Collect all 39 memories for a shared keepsake entry.
-- Flowering trees, petal beds, textured earth paths, staggered waterfall cliffs, lily pads, rice-drying racks, hay bundles, candle paths, lane lanterns, and batched pollen/fireflies.
+- **Daily routines:** children play catch/use the swing, elders occupy park benches, a couple dates in the flower garden, and farmers work then take breaks. Neighbours walk home and retire offscreen at their doors.
+- **Night market:** lanterns and ten vendors/visitors gather from 18:00 to midnight. Children retire at 20:00 and most adults at 21:00. Normal vendor counters open 07:00–00:00. The player's own fruit stall stays self-service.
+- **Shared life:** appreciation, breathing and dancing anywhere nearby; tea, picnic, garden date, sky-watching, tending and market supper at six marked places. Both heroes take part. Move/Esc to finish early. Completed moments create memories, with no currency cost or relationship penalty.
+- **UI and pace:** H opens Together/Village day; inspect resident status and location, find pink hearts on the map, use Quiet HUD, and choose 12/24/36/60-minute days (default 36).
+- **Animation and collision:** frame-rate-independent pose blending, daily gestures/held props, improved seated poses, working house collision for both heroes, and explicit sleep-hour synchronization.
+- All **13 gathering places and 39 activities** from Living Village remain. Teal map diamonds mark gathering places; Journal → Village life tracks activities and friendship visits.
+- Stand quietly together for **35 seconds** to hear occasional two-way conversations about love, kindness and wisdom. They remain interruptible and can be disabled in Settings.
 
 The uploaded video exceeded the attachment tool's **32 MiB transfer limit**, so its frames could not be inspected. These additions follow the user's requested direction and the existing thirteen-region design; they are not a reconstruction of unseen video scenes. See [Living Village notes](docs/LIVING_VILLAGE.md) for scope and implementation details.
 
@@ -69,7 +73,7 @@ GODOT_BIN=/path/to/Godot_v4.7.2-stable_linux.x86_64 ./tools/test.sh
 ./tools/build.sh
 ```
 
-Tests use temporary save directories. The original gameplay, flight/switch, and UI suites remain. `tests/village_life.tscn` adds **195 passing checks**, including all 39 standing approaches and keyboard-focus targets, daily rewards, cancellation, persistence, conversation interruption, friendship visits, and NPC collision avoidance. The runner also loads every script/scene and rejects runtime script errors. See [validation](docs/VALIDATION.md) and [earlier revision notes](docs/REVISION.md).
+Tests use temporary save directories. The original gameplay, flight/switch, and UI suites remain. `tests/village_life.tscn` covers **195 checks**, including all 39 standing approaches and keyboard-focus targets, daily rewards, cancellation, persistence, conversation interruption, friendship visits, and NPC collision avoidance. `tests/daily_life.tscn` tests schedules, all 31 routes home, six ritual clearances, cancellation, shared memories, character identity, house floors/stairs and animation convergence. The runner also loads every gameplay script/scene and rejects runtime script errors. See [validation](docs/VALIDATION.md) and [earlier revision notes](docs/REVISION.md).
 
 For a packaged Linux smoke check, use a temporary save directory:
 
@@ -77,7 +81,7 @@ For a packaged Linux smoke check, use a temporary save directory:
 XDG_DATA_HOME=$(mktemp -d) ./MNKISWAN_Cozy_World.x86_64 --headless --fixed-fps 60 -- --verify-build
 ```
 
-It loads the village, switches to Swan, flies and lands, checks the 39 activities and 23 villagers, and completes an activity before exiting with a success/failure status. Without `--headless`, it also writes a `build-flight.png` screenshot in that temporary Godot user-data folder.
+It loads the village, switches to Swan, flies and lands, checks the 39 activities and 31 villagers, and completes an activity before exiting with a success/failure status. Without `--headless`, it also writes a `build-flight.png` screenshot in that temporary Godot user-data folder.
 
 This is a playable procedural 3D build. Character models are stylized meshes built in code, not artist-authored, skinned production models. Their geometry and animation remain editable in `scripts/art/`. Windows exports are provided; execution testing was performed on Linux.
 

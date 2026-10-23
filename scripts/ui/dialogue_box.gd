@@ -159,6 +159,9 @@ func _npc_id_for(speaker: String) -> String:
 	for region in VillageLifeData.PLACES:
 		if VillageLifeData.PLACES[region][2] == speaker:
 			return VillageLifeData.host_id(region)
+	for id in DailyLifeData.RESIDENTS:
+		if String(DailyLifeData.RESIDENTS[id].name) == speaker:
+			return id
 	for id in NpcDB.NPCS:
 		if String(NpcDB.NPCS[id].name) == speaker:
 			return id

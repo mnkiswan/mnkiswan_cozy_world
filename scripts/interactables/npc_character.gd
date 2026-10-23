@@ -3,6 +3,8 @@ extends Interactable
 ## Scheduled villagers use capsule sweeps to steer around scenery. Blocked routes wait;
 ## they never teleport through walls. Hosts stroll locally and greet visitors sparingly.
 
+var daily_driver: DailyLife
+var _name_label: Label3D
 var npc_id := ""
 var model: CharModel
 var schedule: Array = []     # [[hour, Vector3 world pos], ...] sorted by hour
@@ -52,6 +54,7 @@ func _ready() -> void:
 	_body.add_child(cs)
 	add_child(_body)
 	var nm := EnvKit.label3d(self, NpcDB.display_name(npc_id), Vector3(0, 1.85, 0), 34, Color("173b31"), true)
+	_name_label = nm
 	nm.no_depth_test = false
 	nm.modulate.a = 0.85
 	nm.visibility_range_end = 14.0
@@ -75,6 +78,12 @@ func _schedule_point() -> Vector3:
 	return pt
 
 
+func can_interact(_actor: Node) -> bool:
+	return visible
+
+func interaction_point() -> Vector3:
+	return model.global_position if model else global_position
+
 func get_interaction_prompt(_actor: Node) -> String:
 	var nm := NpcDB.display_name(npc_id)
 	if GameState.quests.available_from(npc_id) != "":
@@ -87,6 +96,9 @@ func interact(actor: Node) -> void:
 	if actor is Node3D:
 		_face((actor as Node3D).global_position)
 	model.play_action("wave", 0.8)
+	if npc_id in ["poppy", "finn", "sumi", "ren"]:
+		_talk_daily()
+		return
 	if not home_region.is_empty():
 		_talk_host()
 		return
@@ -106,6 +118,19 @@ func interact(actor: Node) -> void:
 		lines = [_idle_line()]
 	var done := func(_c): _talking = 1.0
 	GameState.request_dialogue(lines, [], done)
+
+
+func _talk_daily() -> void:
+	var child := npc_id in ["poppy", "finn"]
+	var playtime: bool = daily_driver and daily_driver.residents[npc_id].phase == "play"
+	var worktime: bool = daily_driver and daily_driver.residents[npc_id].phase == "work"
+	var offer := "Join our game" if child else "Help together for a moment"
+	var options: Array = [offer, "Just stopping to say hello"] if (playtime or worktime) else []
+	GameState.request_dialogue([_idle_line()], options, func(choice: int):
+		_talking = 0.0
+		if choice == 0 and not options.is_empty():
+			var ritual := daily_driver.world.get_node_or_null("TogetherMoments") as TogetherMoments
+			if ritual: ritual.begin("play" if child else "help"))
 
 func _talk_host() -> void:
 	var place: Array = VillageLifeData.PLACES[home_region]
@@ -171,6 +196,11 @@ func _face(p: Vector3) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not visible: return
+	_name_label.position = model.position + Vector3(0, 1.85 * model.scale.y, 0)
+	_bubble.position = model.position + Vector3(0, 2.25 * model.scale.y, 0)
+	_marker.position.x = model.position.x
+	_marker.position.z = model.position.z
 	if _bubble_t > 0.0:
 		_bubble_t -= delta
 		if _bubble_t <= 0.0:
@@ -191,6 +221,9 @@ func _physics_process(delta: float) -> void:
 		if not GameState.is_ui_blocking():
 			_talking -= delta
 		model.set_locomotion(0, 1, true)
+		return
+	if daily_driver:
+		daily_driver.step(self, delta)
 		return
 	var to := _target - global_position
 	to.y = 0
@@ -213,7 +246,7 @@ func _physics_process(delta: float) -> void:
 	model.rotation.y = lerp_angle(model.rotation.y, atan2(direction.x, direction.z), 0.12)
 	model.set_locomotion(spd, 3.0, true)
 
-func safe_direction(desired: Vector3) -> Vector3:
+func safe_direction(desired: Vector3, reach: float = 0.65) -> Vector3:
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = _probe
 	query.transform = Transform3D(Basis.IDENTITY, global_position + Vector3(0, 0.78, 0))
@@ -222,7 +255,7 @@ func safe_direction(desired: Vector3) -> Vector3:
 	var space := get_world_3d().direct_space_state
 	for angle in [0.0, 35.0, -35.0, 70.0, -70.0]:
 		var direction := desired.rotated(Vector3.UP, deg_to_rad(angle))
-		query.motion = direction * 0.65
+		query.motion = direction * reach
 		var fractions := space.cast_motion(query)
 		if fractions[0] >= 0.99:
 			return direction

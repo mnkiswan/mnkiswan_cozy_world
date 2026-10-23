@@ -183,7 +183,8 @@ func _process(delta: float) -> void:
 			p.scanner.focus_changed.connect(_on_focus)
 			_connected = true
 	_time_label.text = "Day %d · %s" % [TimeManager.day, TimeManager.clock_string()]
-	_period_label.text = TimeManager.period_name()
+	_period_label.text = TimeManager.period_name() + (" · Lantern market open" if DailyLifeData.market_open(TimeManager.hour()) else "") + "\n" + Settings.binding_label("together") + "  Our days together"
+	_obj_box.visible = not bool(Settings.get_value("quiet_hud")) and (_obj_title.text != "FREE TIME" or GameState.quests.done_ids().size() > 0)
 	# Coin count changes subtly
 	if _coin_shown != GameState.economy.coins:
 		_coin_shown += signi(GameState.economy.coins - _coin_shown) * maxi(1, absi(GameState.economy.coins - _coin_shown) / 8)
@@ -199,7 +200,7 @@ func _process(delta: float) -> void:
 		_save_label.modulate.a = clampf(_save_t, 0.0, 1.0)
 	if _fish_state == "bite":
 		_fish_label.scale = Vector2.ONE * (1.0 + absf(sin(Time.get_ticks_msec() * 0.012)) * 0.08)
-	visible = not force_hidden and not (GameState.top_ui() in ["pause", "map", "journal", "inventory", "shop", "storage", "settings"])
+	visible = not force_hidden and not (GameState.top_ui() in ["pause", "map", "journal", "inventory", "shop", "storage", "settings", "together"])
 	_check_region_banner()
 
 
@@ -226,7 +227,7 @@ func _update_coins() -> void:
 
 func _update_seed() -> void:
 	var s := GameState.get_selected_seed()
-	_seed_label.text = ("Seed: %s (R to change)" % ItemDB.display_name(s)) if s != "" else ""
+	_seed_label.text = ("Seed: %s (%s)" % [ItemDB.display_name(s), Settings.binding_label("cycle_seed")]) if s != "" else ""
 
 
 func _update_objective() -> void:
@@ -268,7 +269,7 @@ func _on_toast(text: String, kind: String) -> void:
 	l.custom_minimum_size.x = 500
 	pc.add_child(l)
 	_toasts.add_child(pc)
-	while _toasts.get_child_count() > 5:
+	while _toasts.get_child_count() > 3:
 		var old := _toasts.get_child(0)
 		_toasts.remove_child(old)
 		old.queue_free()

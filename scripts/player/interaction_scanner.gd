@@ -16,7 +16,7 @@ func _physics_process(delta: float) -> void:
 	_cooldown = maxf(_cooldown - delta, 0.0)
 	if actor == null:
 		return
-	if actor is MnkiController and (actor as MnkiController).flight_mode != "grounded":
+	if actor is MnkiController and ((actor as MnkiController).flight_mode != "grounded" or (actor as MnkiController).state == "locked"):
 		if current:
 			clear()
 		return

@@ -9,10 +9,9 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [  83% ] first_scan_filesystem | Starting file scan...
 [ DONE ] first_scan_filesystem
 
-[   0% ] update_scripts_classes | Started Registering global classes... (3 steps)
-[   0% ] update_scripts_classes | VillageDecor
-[  25% ] update_scripts_classes |
-[  50% ] update_scripts_classes |
+[   0% ] update_scripts_classes | Started Registering global classes... (2 steps)
+[   0% ] update_scripts_classes | DailyLife
+[  33% ] update_scripts_classes |
 [ DONE ] update_scripts_classes
 
 [   0% ] loading_editor_layout | Started Loading editor (5 steps)
@@ -22,7 +21,7 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-Checked 88 files, 0 failures
+Checked 93 files, 0 failures
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
 -- Boot
@@ -163,7 +162,7 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 PASS: 39 activities created
 PASS: all thirteen regions have a gathering place
 PASS: thirteen new hosts created
-PASS: 23 villagers coexist with farm animals
+PASS: 31 villagers coexist with farm animals
 PASS: host starts clear of scenery: life_sunshine_forest
 PASS: host starts clear of scenery: life_waterfall_ponds
 PASS: host starts clear of scenery: life_berry_maze
@@ -356,3 +355,124 @@ PASS: host remembers a friendly visit
 PASS: repeated chat counts only one day of friendship
 PASS: NPC capsule steering respects a blocking wall
 VILLAGE LIFE: 195 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: 31 villagers have a home and routine
+PASS: village houses receive working doorstep interactions
+PASS: shared ritual has room for both partners: together_tea-0.7
+PASS: shared ritual has room for both partners: together_tea0.8
+PASS: shared ritual has room for both partners: together_garden-0.7
+PASS: shared ritual has room for both partners: together_garden0.8
+PASS: shared ritual has room for both partners: together_stars-0.7
+PASS: shared ritual has room for both partners: together_stars0.8
+PASS: shared ritual has room for both partners: together_picnic-0.7
+PASS: shared ritual has room for both partners: together_picnic0.8
+PASS: shared ritual has room for both partners: together_help-0.7
+PASS: shared ritual has room for both partners: together_help0.8
+PASS: shared ritual has room for both partners: together_market-0.7
+PASS: shared ritual has room for both partners: together_market0.8
+PASS: children play catch in the park
+PASS: Pearl reads on the bench
+PASS: Rowan actually occupies his bench seat
+PASS: Sumi works in the rice fields
+PASS: Bao has a field work animation
+PASS: workers and children stop for lunch
+PASS: garden couple spends time together
+PASS: playground swing moves with its seated child
+PASS: child sits on the swing seat rather than floating above it
+PASS: night market lights and vendors are active
+PASS: couple visits market together
+PASS: children and elders sleep at night
+PASS: night market remains lively after household bedtime
+PASS: market opening boundaries are exact
+PASS: reachable route home: lumi
+PASS: reachable route home: rosa
+PASS: reachable route home: ivo
+PASS: reachable route home: bao
+PASS: reachable route home: thronn
+PASS: reachable route home: elder
+PASS: reachable route home: pip
+PASS: reachable route home: mira
+PASS: reachable route home: tamsin
+PASS: reachable route home: odo
+PASS: reachable route home: life_sunshine_forest
+PASS: reachable route home: life_waterfall_ponds
+PASS: reachable route home: life_berry_maze
+PASS: reachable route home: life_flower_garden
+PASS: reachable route home: life_paddy_field
+PASS: reachable route home: life_tropical_forest
+PASS: reachable route home: life_animal_farm
+PASS: reachable route home: life_guardian_gate
+PASS: reachable route home: life_village_park
+PASS: reachable route home: life_treehouse
+PASS: reachable route home: life_colony_one
+PASS: reachable route home: life_colony_two
+PASS: reachable route home: life_market_square
+PASS: reachable route home: poppy
+PASS: reachable route home: finn
+PASS: reachable route home: pearl
+PASS: reachable route home: rowan
+PASS: reachable route home: nila
+PASS: reachable route home: arun
+PASS: reachable route home: sumi
+PASS: reachable route home: ren
+PASS: walked home and retired: lumi
+PASS: walked home and retired: rosa
+PASS: walked home and retired: ivo
+PASS: walked home and retired: bao
+PASS: walked home and retired: thronn
+PASS: walked home and retired: elder
+PASS: walked home and retired: pip
+PASS: walked home and retired: mira
+PASS: walked home and retired: tamsin
+PASS: walked home and retired: odo
+PASS: walked home and retired: life_sunshine_forest
+PASS: walked home and retired: life_waterfall_ponds
+PASS: walked home and retired: life_berry_maze
+PASS: walked home and retired: life_flower_garden
+PASS: walked home and retired: life_paddy_field
+PASS: walked home and retired: life_tropical_forest
+PASS: walked home and retired: life_animal_farm
+PASS: walked home and retired: life_guardian_gate
+PASS: walked home and retired: life_village_park
+PASS: walked home and retired: life_treehouse
+PASS: walked home and retired: life_colony_one
+PASS: walked home and retired: life_colony_two
+PASS: walked home and retired: life_market_square
+PASS: walked home and retired: poppy
+PASS: walked home and retired: finn
+PASS: walked home and retired: pearl
+PASS: walked home and retired: rowan
+PASS: walked home and retired: nila
+PASS: walked home and retired: arun
+PASS: walked home and retired: sumi
+PASS: walked home and retired: ren
+PASS: new morning wakes children
+PASS: nearby grounded partners can start a shared moment
+PASS: both partners join the ritual
+PASS: switch cannot break a shared moment
+PASS: movement gently cancels and restores both actors
+PASS: cancelled moment does not create a completed memory
+PASS: shared dance begins
+PASS: completed ritual creates a saved memory
+PASS: affection does not cost or farm money
+PASS: ritual can be enjoyed again without cooldown
+PASS: repeating ritual does not duplicate daily memory
+PASS: tea creates held cups for both partners
+PASS: both partners have a cup
+PASS: opening a menu clears ritual state and props
+PASS: new shared-life panel participates in modal stack
+PASS: switching works after ritual cancellation
+PASS: Swan can initiate the same rituals
+PASS: ritual speaker follows character switching
+PASS: airborne ritual is rejected
+PASS: night meal cannot start after market closure
+PASS: hero stands on the upper treehouse floor
+Stair traversal finished at (4.3, 3.199593, -2.469925)
+PASS: hero can walk up the treehouse stairs without jumping
+PASS: pose smoothing converges equally at 30 and 120 FPS
+PASS: sleep emits the new hour immediately
+PASS: daily memories save and load with existing schema
+PASS: shared memory survives save serialization
+PASS: all 31 household assignments remain stable when the world loads at night
+DAILY LIFE: 117 passed, 0 failed

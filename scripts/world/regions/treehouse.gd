@@ -77,9 +77,20 @@ func _shell() -> void:
 	for i in 10:
 		var z := 4.2 - i * 0.4
 		_hbox(Vector3(1.2, 0.12, 0.42), Vector3(4.3, 0.2 + i * 0.29, z), FLOOR.lightened(0.08), Vector3.ZERO, 0.006, false)
-	var ramp := EnvKit.body(house, Vector3(4.3, 1.55, 2.45), HOUSE_LAYER)
-	ramp.rotation.x = atan2(2.9, 4.0)
-	EnvKit.add_box_shape(ramp, Vector3(1.2, 0.2, 5.0))
+	# A wedge meets ground level and overlaps the upper deck: the old rotated box
+	# blocked the walking approach at its raised entry edge.
+	var ramp := EnvKit.body(house, Vector3(4.3, 0, 0), HOUSE_LAYER)
+	var shape := ConvexPolygonShape3D.new()
+	var points := PackedVector3Array()
+	for x in [-0.6, 0.6]:
+		points.append(Vector3(x, -0.12, 4.65))
+		points.append(Vector3(x, -0.02, 4.65))
+		points.append(Vector3(x, -0.12, 0.35))
+		points.append(Vector3(x, 3.3, 0.35))
+	shape.points = points
+	var collider := CollisionShape3D.new()
+	collider.shape = shape
+	ramp.add_child(collider)
 	# Roof (no collision — keeps the camera free)
 	var roof := CharParts.add(house, CharParts.cyl_mesh(0.6, 7.6, 2.6, 16), CharParts.mat(Color("6fa35a"), 0.018), Vector3(0, 7.9, 0))
 	roof.name = "LeafRoof"

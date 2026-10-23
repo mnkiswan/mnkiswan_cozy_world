@@ -490,6 +490,7 @@ static func tree_home(parent: Node3D, pos: Vector3, rot_y_deg: float, wall: Colo
 	root.position = pos
 	root.rotation_degrees.y = rot_y_deg
 	parent.add_child(root)
+	root.add_to_group("village_home")
 	var lift := 2.2 if tall else 0.0
 	if tall:
 		CharParts.add(root, CharParts.cyl_mesh(0.9, 1.2, lift + 0.4, 12), CharParts.mat(WOOD, 0.014), Vector3(0, (lift + 0.4) * 0.5, 0))

@@ -40,7 +40,7 @@ const REGION_LINES := {
 
 func _ready() -> void:
 	collision_layer = 4
-	collision_mask = 1
+	collision_mask = 1 | 16
 	floor_snap_length = 0.4
 	var cs := CollisionShape3D.new()
 	var cap := CapsuleShape3D.new()
@@ -199,7 +199,7 @@ func _physics_process(delta: float) -> void:
 	var p := _player()
 	if p == null:
 		return
-	if GameState.is_ui_blocking():
+	if GameState.is_ui_blocking() or state == "together":
 		velocity = Vector3.ZERO
 		model.set_locomotion(0.0, 6.2, is_on_floor())
 		return
@@ -254,10 +254,10 @@ func _physics_process(delta: float) -> void:
 		velocity.y = 4.6  # joyful hop alongside
 	move_and_slide()
 	if hv.length() > 0.2:
-		model.rotation.y = lerp_angle(model.rotation.y, atan2(hv.x, hv.z), 0.15)
+		model.rotation.y = lerp_angle(model.rotation.y, atan2(hv.x, hv.z), 1.0 - exp(-9.751 * delta))
 	elif state == "wait" or pdist < 4.0:
 		var lp := p.global_position - global_position
-		model.rotation.y = lerp_angle(model.rotation.y, atan2(lp.x, lp.z), 0.05)
+		model.rotation.y = lerp_angle(model.rotation.y, atan2(lp.x, lp.z), 1.0 - exp(-3.078 * delta))
 	model.set_locomotion(hv.length(), 6.2, is_on_floor())
 	_recover_check(delta, p, dist, pdist)
 

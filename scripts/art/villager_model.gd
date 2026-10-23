@@ -4,6 +4,7 @@ extends CharModel
 ## duo remains the visual focus (GDD §6). Hats give each villager a readable silhouette.
 
 var def: Dictionary = {}
+var _daily_props: Dictionary = {}
 
 
 func setup(d: Dictionary) -> VillagerModel:
@@ -51,7 +52,36 @@ func build() -> void:
 		var x := -0.16 + i * 0.08
 		var b := CharParts.add(hc, CharParts.sphere_mesh(0.5, 10), CharParts.mat(hair, 0.01), Vector3(x, 0.13, surface_z(0.28, x, 0.13) - 0.03))
 		b.basis = Basis.from_euler(Vector3(-0.4, atan2(x, 0.25), 0)) * Basis.from_scale(Vector3(0.1, 0.12, 0.05))
+	if def.get("age", "") == "elder" or def.get("name", "") == "Elder Maple":
+		for side in [-1, 1]:
+			CharParts.add(hc, CharParts.torus_mesh(0.062, 0.07, 6, 18), CharParts.mat(Color("936a42")), Vector3(side * 0.1, -0.03, 0.255), Vector3(90, 0, 0))
+		CharParts.add(hc, CharParts.box_mesh(Vector3(0.06, 0.012, 0.012)), CharParts.mat(Color("936a42")), Vector3(0, -0.03, 0.265))
+	if def.get("age", "") == "child":
+		head.scale = Vector3.ONE * 1.12
 	_build_hat(hc, String(def.get("hat", "none")), accent)
+	var book := Node3D.new()
+	arm_l.add_child(book)
+	book.position = Vector3(-0.06, -0.26, 0.03)
+	CharParts.add(book, CharParts.box_mesh(Vector3(0.23, 0.035, 0.18)), CharParts.mat(Color("7c8d82")), Vector3.ZERO)
+	CharParts.add(book, CharParts.box_mesh(Vector3(0.2, 0.012, 0.16)), CharParts.mat(Color("f6e6c9")), Vector3(0, 0.025, 0))
+	_daily_props.read = book
+	var tool := Node3D.new()
+	arm_r.add_child(tool)
+	tool.position = Vector3(0, -0.27, 0)
+	CharParts.add(tool, CharParts.cyl_mesh(0.018, 0.018, 0.65, 6), CharParts.mat(EnvKit.WOOD), Vector3(0, -0.1, 0))
+	CharParts.add(tool, CharParts.box_mesh(Vector3(0.16, 0.025, 0.08)), CharParts.mat(Color("839296")), Vector3(0, -0.43, 0.025))
+	_daily_props.farm = tool
+	var bowl := Node3D.new()
+	arm_l.add_child(bowl)
+	bowl.position = Vector3(0, -0.27, 0.03)
+	CharParts.add(bowl, CharParts.cyl_mesh(0.09, 0.05, 0.07, 12), CharParts.mat(Color("e7c493")), Vector3.ZERO)
+	_daily_props.eat = bowl
+	for prop in _daily_props.values(): prop.hide()
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	for key in _daily_props: _daily_props[key].visible = action == key
+
 
 
 func _build_hat(hc: Node3D, hat: String, accent: Color) -> void:

@@ -2,6 +2,7 @@ extends CanvasLayer
 ## UIHost (GDD §15): owns HUD, dialogue and modal screens. UI issues commands; systems remain
 ## authoritative. Handles the menu hotkeys (Tab/I, J, M, Esc) without fighting gameplay input.
 
+var together: TogetherPanel
 var hud: HUD
 var inventory: InventoryPanel
 var shop: ShopPanel
@@ -19,6 +20,7 @@ func _ready() -> void:
 	layer = 10
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	hud = HUD.new(); add_child(hud)
+	together = TogetherPanel.new(); add_child(together)
 	inventory = InventoryPanel.new(); add_child(inventory)
 	shop = ShopPanel.new(); add_child(shop)
 	storage = StoragePanel.new(); add_child(storage)
@@ -35,7 +37,7 @@ func _ready() -> void:
 
 
 func _panels() -> Array:
-	return [inventory, shop, storage, journal, map, settings, pause]
+	return [together, inventory, shop, storage, journal, map, settings, pause]
 
 
 func _top_panel() -> ModalPanel:
@@ -65,9 +67,11 @@ func _input(event: InputEvent) -> void:
 			pause.open()
 			get_viewport().set_input_as_handled()
 		return
-	if top != null and top != inventory and top != journal and top != map:
+	if top != null and top != inventory and top != journal and top != map and top != together:
 		return
-	if event.is_action_pressed("inventory"):
+	if event.is_action_pressed("together"):
+		_toggle(together)
+	elif event.is_action_pressed("inventory"):
 		_toggle(inventory)
 	elif event.is_action_pressed("journal"):
 		_toggle(journal)
@@ -89,6 +93,9 @@ func _toggle(p: ModalPanel) -> void:
 # --- Public API used by world interactables ----------------------------------------------------
 
 func open_shop(mode: String) -> void:
+	if mode in ["grocer", "decor"] and TimeManager.hour() < 7:
+		GameState.notify("The vendors are resting. Counters open at 7 AM; the lantern market starts at 6 PM.", "info")
+		return
 	shop.open_mode(mode)
 
 
@@ -108,6 +115,10 @@ func open_inventory() -> void:
 	inventory.open()
 
 
+func open_together() -> void:
+	together.open()
+
+
 func open_settings() -> void:
 	settings.open()
 
@@ -123,6 +134,8 @@ func sleep_sequence() -> void:
 	tw.tween_property(_fade, "color:a", 1.0, 1.0)
 	await tw.finished
 	TimeManager.sleep_to_morning()
+	var life := get_parent().get_node_or_null("DailyLife")
+	if life: life.sync_clock(true)
 	var p := GameState.player as MnkiController
 	if p:
 		p.model.set_expression("happy", 2.0)

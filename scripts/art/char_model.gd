@@ -28,6 +28,9 @@ var mouth_smile: Node3D
 var mouth_open: Node3D
 var mouth_o: Node3D
 
+var _target_speed := 0.0
+var _opacity := 1.0
+var _geometry: Array[GeometryInstance3D] = []
 var speed_norm := 0.0
 var grounded := true
 var action := ""
@@ -134,7 +137,7 @@ func set_expression(e: String, hold: float = 0.0) -> void:
 # --- Animation API ------------------------------------------------------------------------------
 
 func set_locomotion(speed: float, run_speed: float, is_grounded: bool) -> void:
-	speed_norm = clampf(speed / max(run_speed, 0.01), 0.0, 1.2)
+	_target_speed = clampf(speed / max(run_speed, 0.01), 0.0, 1.2)
 	grounded = is_grounded
 
 
@@ -163,7 +166,16 @@ func is_busy() -> bool:
 	return action != "" and action_dur > 0.0 and action not in ["wave", "celebrate", "think"]
 
 
+func set_opacity(alpha: float) -> void:
+	if is_equal_approx(alpha, _opacity): return
+	_opacity = alpha
+	if _geometry.is_empty():
+		for child in find_children("*", "GeometryInstance3D", true, false):
+			_geometry.append(child)
+	for mesh in _geometry: mesh.transparency = 1.0 - alpha
+
 func _process(delta: float) -> void:
+	speed_norm = lerpf(speed_norm, _target_speed, 1.0 - exp(-10.0 * delta))
 	_time += delta
 	_animate(delta)
 	_update_face(delta)
@@ -183,7 +195,7 @@ func _update_face(delta: float) -> void:
 	if expression != "happy":
 		for e in eyes_open:
 			var en: Node3D = e
-			en.scale.y = lerpf(en.scale.y, blink, 0.6)
+			en.scale.y = lerpf(en.scale.y, blink, 1.0 - exp(-54.977 * delta))
 
 
 func _animate(delta: float) -> void:
@@ -193,7 +205,7 @@ func _animate(delta: float) -> void:
 		_phase += delta * (5.5 + 6.5 * s)
 		swing = sin(_phase)
 	else:
-		_phase = lerpf(_phase, round(_phase / PI) * PI, 0.1)
+		_phase = lerpf(_phase, round(_phase / PI) * PI, 1.0 - exp(-6.322 * delta))
 	var leg_amp := deg_to_rad(10.0 + 28.0 * s)
 	var arm_amp := deg_to_rad(8.0 + 30.0 * s)
 	var target_body_y := absf(sin(_phase)) * 0.035 * s
@@ -223,7 +235,7 @@ func _animate(delta: float) -> void:
 	if action != "":
 		action_t += delta
 		var k := 1.0 if action_dur <= 0.0 else clampf(action_t / action_dur, 0.0, 1.0)
-		var bell := sin(k * PI)
+		var bell := (0.65 + sin(action_t * 2.5) * 0.35) if action_dur <= 0 else sin(k * PI)
 		match action:
 			"gather", "harvest":
 				arm_rx = -deg_to_rad(120.0) * bell
@@ -270,10 +282,35 @@ func _animate(delta: float) -> void:
 				arm_rx = -deg_to_rad(100.0) * bell
 				arm_rz = deg_to_rad(20.0) * bell
 				head_z = deg_to_rad(10.0) * bell
-			"sit":
+			"sit", "read":
 				crouch = 0.2
-				la = -deg_to_rad(80.0)
-				ra = -deg_to_rad(80.0)
+				la = deg_to_rad(80.0)
+				ra = deg_to_rad(80.0)
+				if action == "read":
+					arm_lx = -0.9; arm_rx = -0.9; head_x = 0.18
+			"farm":
+				lean = 0.18 + bell * 0.15
+				arm_rx = -0.7 - bell * 0.4
+				arm_lx = -0.5 - bell * 0.35
+				head_x = 0.15
+			"eat":
+				arm_rx = -0.6 - bell * 0.9
+				arm_lx = -0.65
+				head_x = bell * 0.08
+			"chat", "affection":
+				arm_rx = -0.35 - bell * 0.45
+				head_z = sin(action_t * 1.4) * 0.07
+				arm_lx = -0.4 if action == "affection" else -0.1
+			"dance":
+				arm_lz = 0.7 + bell * 0.3; arm_rz = -arm_lz
+				la = sin(action_t * 3.0) * 0.22; ra = -la
+				hop = absf(sin(action_t * 3.0)) * 0.055
+			"play_ball":
+				arm_lx = -0.6 - bell * 0.6; arm_rx = arm_lx
+				head_x = -bell * 0.1
+			"breathe":
+				arm_lz = 0.2; arm_rz = -0.2
+				head_x = -0.08
 			"surprised":
 				hop = 0.06 * bell
 				arm_lz = deg_to_rad(40.0) * bell
@@ -281,22 +318,22 @@ func _animate(delta: float) -> void:
 		if action_dur > 0.0 and action_t >= action_dur:
 			action = ""
 
-	body.position.y = lerpf(body.position.y, target_body_y + hop - crouch, 0.3)
-	body.rotation.x = lerpf(body.rotation.x, lean, 0.15)
+	body.position.y = lerpf(body.position.y, target_body_y + hop - crouch, 1.0 - exp(-21.4 * delta))
+	body.rotation.x = lerpf(body.rotation.x, lean, 1.0 - exp(-9.751 * delta))
 	if torso:
 		torso.scale = Vector3(1.0 + breathe * 0.5, 1.0 + breathe, 1.0 + breathe * 0.5)
 	if leg_l:
-		leg_l.rotation.x = lerpf(leg_l.rotation.x, -la, 0.35)
-		leg_r.rotation.x = lerpf(leg_r.rotation.x, -ra, 0.35)
+		leg_l.rotation.x = lerpf(leg_l.rotation.x, -la, 1.0 - exp(-25.847 * delta))
+		leg_r.rotation.x = lerpf(leg_r.rotation.x, -ra, 1.0 - exp(-25.847 * delta))
 	if arm_l:
-		arm_l.rotation.x = lerpf(arm_l.rotation.x, arm_lx, 0.25)
-		arm_r.rotation.x = lerpf(arm_r.rotation.x, arm_rx, 0.25)
-		arm_l.rotation.z = lerpf(arm_l.rotation.z, arm_lz, 0.25)
-		arm_r.rotation.z = lerpf(arm_r.rotation.z, arm_rz, 0.25)
+		arm_l.rotation.x = lerpf(arm_l.rotation.x, arm_lx, 1.0 - exp(-17.261 * delta))
+		arm_r.rotation.x = lerpf(arm_r.rotation.x, arm_rx, 1.0 - exp(-17.261 * delta))
+		arm_l.rotation.z = lerpf(arm_l.rotation.z, arm_lz, 1.0 - exp(-17.261 * delta))
+		arm_r.rotation.z = lerpf(arm_r.rotation.z, arm_rz, 1.0 - exp(-17.261 * delta))
 	if head:
-		head.rotation.x = lerpf(head.rotation.x, head_x + head_look.y, 0.15)
-		head.rotation.y = lerpf(head.rotation.y, head_y + head_look.x, 0.12)
-		head.rotation.z = lerpf(head.rotation.z, head_z + sin(_phase) * deg_to_rad(3.0) * s, 0.15)
+		head.rotation.x = lerpf(head.rotation.x, head_x + head_look.y, 1.0 - exp(-9.751 * delta))
+		head.rotation.y = lerpf(head.rotation.y, head_y + head_look.x, 1.0 - exp(-7.67 * delta))
+		head.rotation.z = lerpf(head.rotation.z, head_z + sin(_phase) * deg_to_rad(3.0) * s, 1.0 - exp(-9.751 * delta))
 	_animate_extras(delta, s)
 	# Idle variation: occasional wink / tail curl (low amplitude, GDD §5).
 	if s < 0.05 and action == "":

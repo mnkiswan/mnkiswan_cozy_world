@@ -36,7 +36,7 @@ func _ready() -> void:
 	for child in world.npc_root.get_children():
 		if child is NpcCharacter:
 			villagers += 1
-	check(villagers == 23, "23 villagers coexist with farm animals")
+	check(villagers == 31, "31 villagers coexist with farm animals")
 	for host: NpcCharacter in get_tree().get_nodes_in_group("village_host"):
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = host._probe
@@ -149,6 +149,9 @@ func _ready() -> void:
 	GameState.ui.dialogue._finish(-1)
 	npc._talking = 0
 	npc.global_position = Vector3(20, 0, -20)
+	npc.daily_driver = null # This test isolates the legacy capsule steering contract.
+	npc.show()
+	npc._body.collision_layer = 8
 	npc._target = Vector3(20, 0, -26)
 	var wall := EnvKit.solid_box(world, Vector3(5, 2, 0.3), Vector3(20, 1, -21), Color.WHITE)
 	await frames(90)

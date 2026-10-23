@@ -82,6 +82,13 @@ class MapCanvas extends Control:
 			draw_circle(tp, pulse + 6, Color("e77f6e", 0.35))
 			draw_circle(tp, 8, Color("e77f6e"))
 			draw_string(font, tp + Vector2(12, -10), "next", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("b03a2e"))
+		for place in get_tree().get_nodes_in_group("together_place"):
+			if not GameState.world.is_discovered(place.get_meta("region", "")): continue
+			var at := _w2m(place.global_position)
+			var pink := Color("bc6284")
+			draw_circle(at + Vector2(-3, -2), 4, pink)
+			draw_circle(at + Vector2(3, -2), 4, pink)
+			draw_colored_polygon(PackedVector2Array([at + Vector2(-7, -1), at + Vector2(7, -1), at + Vector2(0, 8)]), pink)
 		# Swan
 		if GameState.swan:
 			draw_circle(_w2m(GameState.swan.global_position), 7, Color.WHITE)
@@ -99,7 +106,7 @@ class MapCanvas extends Control:
 			if not GameState.world.has_flag("sky_feather_%d" % i):
 				var pos := _w2m(SkyTrail.STOPS[i])
 				draw_arc(pos, 6, 0, TAU, 20, Color("bd8a2e"), 2.5)
-		draw_string(font, Vector2(16, size.y - 36), "Teal diamonds: gathering places · Gold centres: all three memories collected", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("173b31"))
+		draw_string(font, Vector2(16, size.y - 36), "Teal: gathering places · Pink hearts: shared rituals · Gold centres: completed", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("173b31"))
 		draw_string(font, Vector2(16, size.y - 14), "Arrow: you · White: friend · Gold rings: sky feathers · Coral: objective", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("173b31"))
 
 	func _quest_target():

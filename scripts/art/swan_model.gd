@@ -187,23 +187,23 @@ func _animate_extras(delta: float, s: float) -> void:
 		var flap := sin(_time * 2.4) * deg_to_rad(6.0) + sin(_phase * 2.0) * deg_to_rad(5.0) * s
 		if action == "celebrate":
 			flap += sin(_time * 14.0) * deg_to_rad(22.0)
-		wing_l.rotation.y = lerpf(wing_l.rotation.y, deg_to_rad(-32.0) - flap, 0.2)
-		wing_r.rotation.y = lerpf(wing_r.rotation.y, deg_to_rad(32.0) + flap, 0.2)
-		wing_l.rotation.z = lerpf(wing_l.rotation.z, flap * 0.5, 0.2)
-		wing_r.rotation.z = lerpf(wing_r.rotation.z, -flap * 0.5, 0.2)
+		wing_l.rotation.y = lerpf(wing_l.rotation.y, deg_to_rad(-32.0) - flap, 1.0 - exp(-13.389 * delta))
+		wing_r.rotation.y = lerpf(wing_r.rotation.y, deg_to_rad(32.0) + flap, 1.0 - exp(-13.389 * delta))
+		wing_l.rotation.z = lerpf(wing_l.rotation.z, flap * 0.5, 1.0 - exp(-13.389 * delta))
+		wing_r.rotation.z = lerpf(wing_r.rotation.z, -flap * 0.5, 1.0 - exp(-13.389 * delta))
 		if _wing_spread > 0.01:
 			var beat := sin(_time * (10.0 if flight_lift > 0.2 else 5.5)) * (0.5 if flight_lift > 0.2 else 0.25)
 			wing_l.rotation = wing_l.rotation.lerp(Vector3(0.12, -0.1, 0.3 + beat), _wing_spread)
 			wing_r.rotation = wing_r.rotation.lerp(Vector3(0.12, 0.1, -0.3 - beat), _wing_spread)
 			body.rotation.x = lerpf(body.rotation.x, 0.17 * s, _wing_spread)
-			body.rotation.z = lerpf(body.rotation.z, flight_bank, 0.1)
+			body.rotation.z = lerpf(body.rotation.z, flight_bank, 1.0 - exp(-6.322 * delta))
 		wing_l.scale = Vector3(0.78, 0.78, 0.78).lerp(Vector3(2.1, 1.6, 1.3), _wing_spread)
 		wing_r.scale = wing_l.scale
 		if flight_blend == 0.0:
-			body.rotation.z = lerpf(body.rotation.z, 0.0, 0.15)
+			body.rotation.z = lerpf(body.rotation.z, 0.0, 1.0 - exp(-9.751 * delta))
 	if hair_back:
-		hair_back.rotation.x = lerpf(hair_back.rotation.x, deg_to_rad(6.0) * s + sin(_time * 1.3) * deg_to_rad(1.5), 0.08)
-		hair_back.rotation.z = lerpf(hair_back.rotation.z, sin(_phase) * deg_to_rad(2.5) * s, 0.08)
+		hair_back.rotation.x = lerpf(hair_back.rotation.x, deg_to_rad(6.0) * s + sin(_time * 1.3) * deg_to_rad(1.5), 1.0 - exp(-5.003 * delta))
+		hair_back.rotation.z = lerpf(hair_back.rotation.z, sin(_phase) * deg_to_rad(2.5) * s, 1.0 - exp(-5.003 * delta))
 
 
 func _idle_variant() -> void:

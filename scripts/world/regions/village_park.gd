@@ -2,6 +2,7 @@ extends RegionBase
 ## 09 Village Garden & Park — central green, old tree, circular walk, play area, elder's home,
 ## community board. Visibly restored by "A Basket for the Village" and lit up by the festival.
 
+var swing_pivot: Node3D
 var _bed_flowers: Node3D
 var _bed_empty: Node3D
 var _basket: Node3D
@@ -26,9 +27,12 @@ func build() -> void:
 	for x in [-1.0, 1.0]:
 		CharParts.add(self, CharParts.cyl_mesh(0.06, 0.06, 2.4, 6), CharParts.mat(Color("e77f6e"), 0.008), Vector3(9 + x, 1.2, 7), Vector3(0, 0, x * 10))
 	CharParts.add(self, CharParts.cyl_mesh(0.06, 0.06, 2.4, 6), CharParts.mat(Color("e77f6e"), 0.008), Vector3(9, 2.35, 7), Vector3(0, 0, 90))
-	CharParts.add(self, CharParts.box_mesh(Vector3(0.6, 0.06, 0.3)), CharParts.mat(EnvKit.WOOD_LIGHT, 0.008), Vector3(9, 0.6, 7))
+	swing_pivot = Node3D.new()
+	swing_pivot.position = Vector3(9, 2.35, 7)
+	add_child(swing_pivot)
+	CharParts.add(swing_pivot, CharParts.box_mesh(Vector3(0.6, 0.06, 0.3)), CharParts.mat(EnvKit.WOOD_LIGHT, 0.008), Vector3(0, -1.75, 0))
 	for x in [-0.25, 0.25]:
-		CharParts.add(self, CharParts.cyl_mesh(0.01, 0.01, 1.7, 4), CharParts.mat(Color("6b4a33")), Vector3(9 + x, 1.47, 7))
+		CharParts.add(swing_pivot, CharParts.cyl_mesh(0.01, 0.01, 1.7, 4), CharParts.mat(Color("6b4a33")), Vector3(x, -0.88, 0))
 	var slide := CharParts.add(self, CharParts.box_mesh(Vector3(0.8, 0.08, 3.0)), CharParts.mat(Color("78c9d4"), 0.008), Vector3(10.5, 0.8, 1.5), Vector3(32, 0, 0))
 	slide.name = "Slide"
 	EnvKit.solid_box(self, Vector3(1.0, 1.6, 1.0), Vector3(10.5, 0.8, -0.3), Color("f2d84b"), 0, 0.01)

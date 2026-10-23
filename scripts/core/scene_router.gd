@@ -48,17 +48,28 @@ func _verify_build() -> void:
 	for i in 180:
 		await get_tree().physics_frame
 	var landed := p.flight_mode == "grounded" and p.is_on_floor()
+	var village: Node3D = p.get_parent()
+	var daily := village.get_node("DailyLife") as DailyLife
+	var ritual := village.get_node("TogetherMoments") as TogetherMoments
+	p.model.clear_action()
+	GameState.swan.model.clear_action()
+	var together_ok := ritual.begin("appreciate")
+	if together_ok: ritual.finish(false)
+	TimeManager.minute = 22 * 60
+	daily.sync_clock(true)
+	var schedule_ok: bool = daily.initialized and daily.residents.poppy.sleeping and not daily.residents.tamsin.sleeping
 	var activities := get_tree().get_nodes_in_group("cozy_activity")
-	var life_ready := activities.size() == 39 and get_tree().get_nodes_in_group("villager").size() == 23
+	var life_ready := activities.size() == 39 and get_tree().get_nodes_in_group("villager").size() == 31
 	var activity_ok := false
 	if life_ready:
 		var activity: CozyActivity = activities[0]
 		p.teleport(activity.global_position + Vector3(0, 0.1, 1.1))
 		var coins := GameState.economy.coins
 		activity_ok = activity.complete(p) and GameState.economy.coins == coins + 2 and activity.result.visible
-	var ok := switched and took_off and airborne and landed and life_ready and activity_ok
+	var ok := switched and took_off and airborne and landed and life_ready and activity_ok and together_ok and schedule_ok
 	print("PACKAGED BUILD CHECK: switch=%s takeoff=%s airborne=%s landed=%s" % [switched, took_off, airborne, landed])
 	print("PACKAGED VILLAGE CHECK: world=%s activity=%s" % [life_ready, activity_ok])
+	print("PACKAGED DAILY CHECK: together=%s night_schedule=%s" % [together_ok, schedule_ok])
 	get_tree().quit(0 if ok else 1)
 
 

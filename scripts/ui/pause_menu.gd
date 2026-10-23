@@ -13,14 +13,14 @@ func _init() -> void:
 
 
 func panel_size() -> Vector2:
-	return Vector2(640, 720)
+	return Vector2(640, 820)
 
 
 func build_content() -> void:
 	_save_info = UITheme.label("", 20, UITheme.MUTED)
 	_save_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(_save_info)
-	for entry in [["Resume", close], ["Save game", _save], ["Journal", func(): _switch("journal")], ["Map", func(): _switch("map")], ["Settings", func(): _switch("settings")], ["Save & return to title", _to_title], ["Quit to desktop", _quit]]:
+	for entry in [["Resume", close], ["Save game", _save], ["Our days together", func(): _switch("together")], ["Journal", func(): _switch("journal")], ["Map", func(): _switch("map")], ["Settings", func(): _switch("settings")], ["Save & return to title", _to_title], ["Quit to desktop", _quit]]:
 		var b := UITheme.button(String(entry[0]), entry[1], 560)
 		b.custom_minimum_size.y = 64
 		content.add_child(b)

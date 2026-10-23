@@ -48,6 +48,8 @@ func _ready() -> void:
 	add_child(ui)
 	GameState.ui = ui
 	add_child(CoupleConversations.new())
+	add_child(DailyLife.new())
+	add_child(TogetherMoments.new())
 	GameState.shop.ensure_orders()
 	GameState.world.flag_set.connect(_on_flag)
 	TimeManager.running = true

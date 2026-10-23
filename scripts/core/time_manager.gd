@@ -1,12 +1,11 @@
 extends Node
-## Central clock in in-game minutes (GDD §9.9). ~12 real minutes per day by default.
+## Central clock in in-game minutes (GDD §9.9). 36 real minutes per day by default (adjustable).
 ## Time pauses while menus/dialogue are open. Crops and animals react to day_started, not polling.
 
 signal minute_changed(total_minutes: float)
 signal hour_changed(hour: int)
 signal day_started(day: int)
 
-const REAL_SECONDS_PER_DAY := 720.0
 const DAY_START_MINUTE := 360.0      # 6:00
 
 var day: int = 1
@@ -24,7 +23,7 @@ func reset() -> void:
 func _process(delta: float) -> void:
 	if not running or GameState.is_ui_blocking():
 		return
-	minute += delta * 1440.0 / REAL_SECONDS_PER_DAY
+	minute += delta * 1440.0 / (clampf(float(Settings.get_value("day_minutes")), 12, 60) * 60.0)
 	if minute >= 1440.0:
 		minute -= 1440.0
 		day += 1
@@ -56,7 +55,8 @@ func sleep_to_morning() -> void:
 		day += 1
 		minute = DAY_START_MINUTE
 		day_started.emit(day)
-	_last_hour = -1
+	_last_hour = hour()
+	hour_changed.emit(_last_hour)
 	minute_changed.emit(total_minutes())
 
 
